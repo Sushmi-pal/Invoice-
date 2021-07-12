@@ -1,0 +1,12 @@
+a:hover{
+    font-size: 20px;
+}
+
+@media screen and (max-width: 578px){
+    .container{
+        width: 100%;
+    }
+    #result{
+        width: 100%;
+    }
+}

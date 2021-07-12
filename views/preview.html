@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="../css/preview.css">
+<!--  <script type="text/javascript" src="../js/preview.js"></script>-->
+</head>
+<body>
+
+<div id="invoice">
+  <div class="invoice overflow-auto">
+    <div style="min-width: 600px">
+      <header>
+        <div class="row">
+          <div class="col">
+            Company Logo
+          </div>
+          <div class="col company-details">
+            <h2 id="name"></h2>
+            <div id="address"></div>
+            <div id="contact"></div>
+            <div id="email"></div>
+          </div>
+        </div>
+      </header>
+      <main>
+        <div class="row contacts">
+          <div class="col invoice-details">
+            <h1 id="invoice-id"></h1>
+            <div id="date">Date of Invoice: </div>
+            <div id="duedate">Due Date: </div>
+          </div>
+        </div>
+        <table border="0" cellspacing="0" cellpadding="0">
+          <thead>
+          <tr>
+            <th>SN.</th>
+            <th class="text-left">Items</th>
+            <th class="text-right">Unit cost</th>
+            <th class="text-right">Quantity</th>
+            <th class="text-right">TOTAL</th>
+          </tr>
+          </thead>
+          <tbody id="preview"></tbody>
+
+          <tfoot>
+          <tr>
+            <td colspan="2"></td>
+            <td colspan="2">SUBTOTAL</td>
+            <td id="total"></td>
+          </tr>
+          <tr>
+            <td colspan="2"></td>
+            <td colspan="2" id="dis"></td>
+            <td id="disprice"></td>
+          </tr>
+          <tr>
+            <td colspan="2"></td>
+            <td colspan="2" id="tax"></td>
+            <td id="taxprice"> </td>
+          </tr>
+          <tr>
+            <td colspan="2"></td>
+            <td colspan="2">GRAND TOTAL</td>
+            <td id="gtotal"></td>
+          </tr>
+          </tfoot>
+        </table>
+        <div class="thanks">Thank you!</div>
+        <div class="notices">
+          <div>NOTICE:</div>
+          <div class="notice">A finance charge of 1.5% will be made on unpaid balances after 30 days.</div>
+        </div>
+      </main>
+      <footer>
+        Invoice was created on a computer and is valid without the signature and seal.
+      </footer>
+    </div>
+    <div></div>
+  </div>
+</div>
+<script>
+
+  invoice_id=window.location.href.split('#')[1]
+  console.log(invoice_id)
+  fetch("http://localhost/api/companylist?id="+invoice_id).then(res=>res.json()).then(data=>{
+    console.log(data)
+    $( "#name" ).append( `${data.data[0]['company_name']}` );
+    $("#address").append(`${data.data[0]['address']}, `);
+    $("#address").append(`${data.data[0]['city']}` );
+    $("#contact").append(`${data.data[0]['contact']}` );
+    $("#email").append(`${data.data[0]['email']}` );
+    console.log(data.data)
+    invid=data.data[0]['invoice_id']
+    console.log('invid',invid)
+    strid=invid.toString()
+    console.log('strid',strid)
+    if (strid.length==1){
+
+      $("#invoice-id").append(`INV00${data.data[0]['invoice_id']}` );}
+    else{
+      $("#invoice-id").append(`INV0${strid}` );
+    }
+    date=data.data[0]['created_at']
+    date=date.slice(0,10).split('-').reverse().join('/')
+    duedate=date.split('/')
+    if (duedate[1] !=12){
+      m=parseInt(duedate[1])+1
+      a=m.toString().length==1?'0'+m:m
+      duedate=duedate[0]+'/'+a+'/'+duedate[2]
+    }
+    else{
+      m=parseInt(duedate[1])+1
+      y=parseInt(duedate[2])+1
+      a=m.toString().length==1?'0'+m:m
+      duedate=duedate[0]+'/'+a + '/' + y
+    }
+    console.log(duedate)
+    $("#date").append(date);
+    $("#duedate").append(duedate);
+
+  })
+  total=document.getElementById('total')
+  $.get("http://localhost/rest/api/getdate?id="+window.location.href.split("#")[1], function (data) {
+    preview=document.getElementById('preview');
+
+    let op='<tr>'
+    var totalcost=0
+    data.data.forEach(function (data,index) {
+
+      op+=`<td >${index+1}</td>`
+      op+=`<td >${data['item_name']}</td>`
+      op+=`<td >${data['unit_cost']}</td>`
+      op+=`<td >${data['quantity']}</td>`
+      cost_item=data['unit_cost']*data['quantity']
+      totalcost+=data['unit_cost']*data['quantity']
+      op+=`<td >${cost_item}</td>`
+      op+=`</tr>`
+      preview.innerHTML = op;
+      total.innerText=totalcost
+    })
+
+  });
+  dis=document.getElementById('dis')
+
+  disprice=document.getElementById('disprice')
+
+  tax=document.getElementById('tax')
+
+  taxprice=document.getElementById('taxprice')
+  gtotal=document.getElementById('gtotal')
+
+
+  if (localStorage.getItem("discount") && localStorage.getItem("tax")){
+    dis.innerHTML="DISCOUNT "+localStorage.getItem("discount")+"%"
+    disprice.innerText=localStorage.getItem("dcost")
+    tax.innerHTML="TAX "+localStorage.getItem("tax")+"%"
+    taxprice.innerText=localStorage.getItem("tcost")
+    gtotal.innerText=localStorage.getItem("tcost")
+  }
+  else{
+
+    fetch("http://localhost/api/companylist?id="+window.location.href.split("#")[1]).then(res=>res.json()).then(data=> {
+              dis.innerHTML="DISCOUNT "+10+"%"
+              tax.innerHTML="TAX "+5+"%"
+              dcost=(1-10/100)*data.data[0]['total_cost']
+              disprice.innerText=dcost
+              tcost=(1+5/100)*dcost
+              taxprice.innerText=tcost
+              gtotal.innerText=tcost
+            }
+    )
+
+  }
+</script>
+</body>
+</html>
+

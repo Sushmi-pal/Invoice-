@@ -1,0 +1,32 @@
+.container{
+    background-image: linear-gradient(to right,#2895f1,#0060b1);
+    color: white;
+    padding-top: 3%;
+    width: 25%;
+}
+.btn {
+    cursor: pointer;
+    border-radius: 0.6em;
+    color: #fff;
+    background: linear-gradient(to right,#2895f1,#0060b1);
+    border: 0px;
+    text-decoration: none;
+    outline: none;
+    font-family: 'Ubuntu', sans-serif;
+    box-shadow: 0 0 20px 1px rgba(0, 0, 0, 0.04);
+    padding: 10px 40px;
+    font-size: 16px;
+    margin-bottom: 10px;
+    margin-top: 14px;
+    margin-left: 30%;
+}
+.btn:hover{
+    font-size: 17px;
+}
+
+@media screen and (max-width: 578px){
+    .container{
+        width: 100%;
+    }
+
+}

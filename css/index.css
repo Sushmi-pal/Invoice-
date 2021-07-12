@@ -1,0 +1,25 @@
+nav li{
+    display: block;
+    float: right;
+
+}
+
+
+.navbar{
+    background-color: #3989c6;
+}
+
+.nav-link{
+    color: white !important;
+    font-weight: 600;
+    float: right;
+    text-align: right;
+}
+
+a:hover{
+    font-size: 25px;
+}
+
+.active{
+    font-size: 25px;
+}

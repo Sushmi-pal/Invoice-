@@ -1,0 +1,49 @@
+nav li{
+    display: block;
+    float: right;
+
+}
+
+
+.navbar{
+    background-color: #3989c6;
+}
+
+.nav-link{
+    color: white !important;
+    font-weight: 600;
+    float: right;
+    text-align: right;
+}
+
+a:hover{
+    font-size: 30px;
+}
+
+.active{
+    font-size: 25px;
+}
+
+
+#invoice{
+
+    background-image: linear-gradient(to right,#2895f1,#0060b1);
+    color: white;
+    padding-top: 3%;
+    width: 85%;
+    border-radius: 5%;
+    padding-left: 5%;
+    height: 80vh;
+
+
+}
+.contain{
+    padding-left: 20%;
+}
+.new{
+    color: white !important;
+    text-decoration: none;
+}
+.btn{
+    color: white;
+}
