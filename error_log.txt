@@ -1,0 +1,71 @@
+[14-Jul-2021 05:05:43 Europe/Berlin] PHP Fatal error:  SQLSTATE[42703]: Undefined column: 7 ERROR:  column "el" does not exist
+LINE 1: select * from company1 where el=''
+                                     ^ in C:\xampp\htdocs\api\controller\Companycontroller.php on line 46
+[14-Jul-2021 05:07:04 Europe/Berlin] PHP Fatal error:  SQLSTATE[42703]: Undefined column: 7 ERROR:  column "el" does not exist
+LINE 1: select * from company1 where el=''
+                                     ^ in C:\xampp\htdocs\api\controller\Companycontroller.php on line 46
+[14-Jul-2021 05:47:27 Europe/Berlin] PHP Fatal error:  Human error in C:\xampp\htdocs\api\controller\Companycontroller.php on line 42
+[14-Jul-2021 06:34:49 Europe/Berlin] PHP Fatal error:  message in C:\xampp\htdocs\api\controller\Companycontroller.php on line 48
+[14-Jul-2021 06:38:30 Europe/Berlin] PHP Fatal error:   in C:\xampp\htdocs\api\controller\Companycontroller.php on line 48
+[14-Jul-2021 06:46:50 Europe/Berlin] PHP Fatal error:   in C:\xampp\htdocs\api\model\company.php on line 69
+[14-Jul-2021 06:47:11 Europe/Berlin] PHP Fatal error:  warning in C:\xampp\htdocs\api\model\company.php on line 69
+[14-Jul-2021 07:02:43 Europe/Berlin] PHP Fatal error:  text in C:\xampp\htdocs\api\model\company.php on line 69
+[14-Jul-2021 12:39:01 UTC] PHP Fatal error:  text in C:\xampp\htdocs\api\model\company.php on line 78
+[15-Jul-2021 01:49:05 UTC] PHP Fatal error:  text in C:\xampp\htdocs\api\model\company.php on line 78
+[15-Jul-2021 01:52:24 UTC] PHP Fatal error:  text in C:\xampp\htdocs\api\model\company.php on line 78
+[15-Jul-2021 01:53:16 UTC] PHP Fatal error:  SQLSTATE[42601]: Syntax error: 7 ERROR:  syntax error at or near ")"
+LINE 1: insert into invoice(company_id) values ()
+                                                ^ in C:\xampp\htdocs\api\controller\Companycontroller.php on line 13
+[15-Jul-2021 01:56:11 UTC] PHP Fatal error:  SQLSTATE[42601]: Syntax error: 7 ERROR:  syntax error at end of input
+LINE 1: ... invoice on itemrest.invoice_id=invoice.id where invoice.id=
+                                                                       ^ in C:\xampp\htdocs\api\controller\Companycontroller.php on line 13
+[15-Jul-2021 01:56:34 UTC] PHP Fatal error:  SQLSTATE[42601]: Syntax error: 7 ERROR:  syntax error at end of input
+LINE 1: ...name='', address='', email='', contact='', city='' where id=
+                                                                       ^ in C:\xampp\htdocs\api\controller\Companycontroller.php on line 13
+[15-Jul-2021 01:56:47 UTC] PHP Fatal error:  SQLSTATE[42601]: Syntax error: 7 ERROR:  syntax error at end of input
+LINE 1: ...name='', address='', email='', contact='', city='' where id=
+                                                                       ^ in C:\xampp\htdocs\api\controller\Companycontroller.php on line 13
+[15-Jul-2021 01:57:03 UTC] PHP Fatal error:  SQLSTATE[42601]: Syntax error: 7 ERROR:  syntax error at end of input
+LINE 1: ...ompany1 on invoice.company_id=company1.id where company1.id=
+                                                                       ^ in C:\xampp\htdocs\api\controller\Companycontroller.php on line 13
+[15-Jul-2021 01:59:20 UTC] PHP Fatal error:  text in C:\xampp\htdocs\api\model\company.php on line 78
+[15-Jul-2021 01:59:58 UTC] PHP Fatal error:  SQLSTATE[42601]: Syntax error: 7 ERROR:  syntax error at or near ")"
+LINE 1: insert into invoice(company_id) values ()
+                                                ^ in C:\xampp\htdocs\api\controller\Companycontroller.php on line 13
+[15-Jul-2021 02:00:22 UTC] PHP Fatal error:  SQLSTATE[42601]: Syntax error: 7 ERROR:  syntax error at or near ")"
+LINE 1: insert into invoice(company_id) values ()
+                                                ^ in C:\xampp\htdocs\api\controller\Companycontroller.php on line 13
+[15-Jul-2021 02:01:20 UTC] PHP Fatal error:  SQLSTATE[42601]: Syntax error: 7 ERROR:  syntax error at or near ")"
+LINE 1: insert into invoice(company_id) values ()
+                                                ^ in C:\xampp\htdocs\api\controller\Companycontroller.php on line 13
+[15-Jul-2021 02:02:31 UTC] PHP Fatal error:  SQLSTATE[42601]: Syntax error: 7 ERROR:  syntax error at or near ")"
+LINE 1: insert into invoice(company_id) values ()
+                                                ^ in C:\xampp\htdocs\api\controller\Companycontroller.php on line 13
+[15-Jul-2021 02:06:35 UTC] PHP Fatal error:  text in C:\xampp\htdocs\api\model\company.php on line 78
+[15-Jul-2021 02:08:22 UTC] PHP Fatal error:  SQLSTATE[42601]: Syntax error: 7 ERROR:  syntax error at or near ")"
+LINE 1: insert into invoice(company_id) values ()
+                                                ^ in C:\xampp\htdocs\api\controller\Companycontroller.php on line 13
+[15-Jul-2021 02:11:23 UTC] PHP Fatal error:  SQLSTATE[42601]: Syntax error: 7 ERROR:  syntax error at end of input
+LINE 1: ... invoice on itemrest.invoice_id=invoice.id where invoice.id=
+                                                                       ^ in C:\xampp\htdocs\api\controller\Companycontroller.php on line 13
+[15-Jul-2021 02:11:36 UTC] PHP Fatal error:  SQLSTATE[42601]: Syntax error: 7 ERROR:  syntax error at end of input
+LINE 1: ... invoice on itemrest.invoice_id=invoice.id where invoice.id=
+                                                                       ^ in C:\xampp\htdocs\api\controller\Companycontroller.php on line 13
+[15-Jul-2021 02:12:03 UTC] PHP Fatal error:  SQLSTATE[42601]: Syntax error: 7 ERROR:  syntax error at end of input
+LINE 1: ... invoice on itemrest.invoice_id=invoice.id where invoice.id=
+                                                                       ^ in C:\xampp\htdocs\api\controller\Companycontroller.php on line 13
+[15-Jul-2021 02:12:40 UTC] PHP Fatal error:  SQLSTATE[42601]: Syntax error: 7 ERROR:  syntax error at end of input
+LINE 1: ... invoice on itemrest.invoice_id=invoice.id where invoice.id=
+                                                                       ^ in C:\xampp\htdocs\api\controller\Companycontroller.php on line 13
+[15-Jul-2021 02:13:17 UTC] PHP Fatal error:  SQLSTATE[42601]: Syntax error: 7 ERROR:  syntax error at end of input
+LINE 1: ...ompany1 on invoice.company_id=company1.id where company1.id=
+                                                                       ^ in C:\xampp\htdocs\api\controller\Companycontroller.php on line 13
+[15-Jul-2021 02:13:38 UTC] PHP Fatal error:  SQLSTATE[42601]: Syntax error: 7 ERROR:  syntax error at or near ")"
+LINE 1: insert into invoice(company_id) values ()
+                                                ^ in C:\xampp\htdocs\api\controller\Companycontroller.php on line 13
+[15-Jul-2021 02:13:53 UTC] PHP Fatal error:  SQLSTATE[42601]: Syntax error: 7 ERROR:  syntax error at or near ")"
+LINE 1: insert into invoice(company_id) values ()
+                                                ^ in C:\xampp\htdocs\api\controller\Companycontroller.php on line 13
+[15-Jul-2021 02:29:36 UTC] PHP Fatal error:  SQLSTATE[42601]: Syntax error: 7 ERROR:  syntax error at or near ")"
+LINE 1: insert into invoice(company_id) values ()
+                                                ^ in C:\xampp\htdocs\api\controller\Companycontroller.php on line 13

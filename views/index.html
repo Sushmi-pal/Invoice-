@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Invoice List</title>
+    <title>Invoice</title>
     <link rel="stylesheet" href="../css/index.css">
     <script src="../js/index.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -142,7 +142,7 @@ page=document.getElementById('page')
 var tl=localStorage.getItem("tt")
 var totallength=tl
 
-numofPages=Math.ceil(totallength/10)
+numofPages=Math.ceil(totallength/5)
 console.log("num",numofPages)
 op=''
 for (i=1; i<=numofPages;i++){
@@ -155,12 +155,12 @@ var lp=localStorage.getItem("allIDs1")
 var sp=lp.split(',')
 console.log("sort",sp.sort((a,b)=>a-b))
 function newpage(id){
-    iid=(id-1)*10
+    iid=(id-1)*5
     var storedId = sp.sort((a,b)=>a-b);
     console.log("storedid",storedId)
 
 
-    fetch("http://localhost/api/invoicepages?offset="+storedId[iid]+"&limit=10").then(res=>res.json()).then(data=>{
+    fetch("http://localhost/api/invoicepages?offset="+storedId[iid]+"&limit=5").then(res=>res.json()).then(data=>{
         tbody = document.getElementById("abc")
         localStorage.setItem("total length1",data.data.length)
         op = "<tr>"

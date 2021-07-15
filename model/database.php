@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Class Database
+ */
 class Database
 {
     private $host = 'localhost';
@@ -8,6 +11,9 @@ class Database
     private $password = 'password';
     private $pdo;
 
+    /**
+     * @return PDO
+     */
     public function connectme()
     {
         try {
@@ -18,6 +24,9 @@ class Database
         return $this->pdo;
     }
 
+    /**
+     * @return mixed
+     */
     public function datas()
     {
         $data = json_decode(file_get_contents("php://input"), true);
