@@ -109,6 +109,7 @@ fabric.properties
 .idea/codestream.xml
 .idea/
 ./model/database.php
+C:\xampp\htdocs\api\model\database.php
 # End of https://www.toptal.com/developers/gitignore/api/phpstorm
 
 Createcompany api for addcompany.html
