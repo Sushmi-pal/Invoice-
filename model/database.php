@@ -8,7 +8,7 @@ class Database
     private $host = 'localhost';
     private $db = 'crud';
     private $user = 'postgres';
-    private $password = 'password';
+    private $password = '';
     private $pdo;
 
     /**
