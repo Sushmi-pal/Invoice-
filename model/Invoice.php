@@ -284,9 +284,12 @@ class Invoice
             echo json_encode(["message" => "cname unset"]);
         }
     }
-//    public function __destruct(){
-//        $this->conn->close();
-//    }
+
+    public function __destruct(){
+        $db=new Database();
+        $db->closeme();
+    }
+
 
 }
 

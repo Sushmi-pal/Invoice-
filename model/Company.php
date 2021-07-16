@@ -198,9 +198,10 @@ class Company
         }
     }
 
-//    public function __destruct(){
-//        $this->conn->close();
-//    }
+    public function __destruct(){
+        $db=new Database();
+        $db->closeme();
+    }
 
 }
 
