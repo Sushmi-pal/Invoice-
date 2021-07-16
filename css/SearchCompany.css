@@ -23,3 +23,9 @@ a:hover{
 .active{
     font-size: 25px;
 }
+
+#result{
+    margin-top: 50px;
+    border: 2px solid black;
+}
+

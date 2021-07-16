@@ -2,38 +2,43 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Invoice</title>
-    <link rel="stylesheet" href="../css/index.css">
-    <script src="../js/index.js"></script>
+    <title>Invoice Details</title>
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.1/css/all.css" crossorigin="anonymous">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <script src="../js/index.js"></script>
+    <link rel="stylesheet" href="../css/index.css">
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light">
-    <li class="nav-item">
-        <a class="nav-link" href="addcompany.html">NEW COMPANY</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="invoice1.html">NEW INVOICE</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link active" href="index.html">VIEW INVOICE</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="companylist.html">VIEW COMPANY</a>
-    </li>
+    <ul>
+        <li class="nav-item">
+            <a class="nav-link" href="addcompany.html">NEW COMPANY</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="invoice1.html">NEW INVOICE</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active" href="index.html">VIEW INVOICE</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="companylist.html">VIEW COMPANY</a>
+        </li>
+    </ul>
 </nav>
 <br><br>
-<form class="d-flex" action="searchc.html">
+<form class="d-flex" action="SearchCompany.html">
     <input class="form-control me-2" type="search" name="search" id="search" placeholder="Search" aria-label="Search">
     <button class="btn btn-outline-success" name="submit" value="submit">Search</button>
-</form><br><br>
+</form>
+<br><br>
 
 <nav aria-label="Page navigation example">
     <ul id="page" class="pagination"></ul>
 </nav>
-<div id="result" style="margin-top: 50px; border: 2px solid black">
+<div id="invoice_details">
     <table class="table table-hover" id="myTable">
         <thead>
         <tr>
@@ -45,140 +50,49 @@
             <th scope="col">Delete</th>
         </tr>
         </thead>
-        <tbody id="abc"></tbody>
+        <tbody id="invoice_details_table"></tbody>
     </table>
 </div>
 <script>
+    page = document.getElementById('page')
+    var totallength = localStorage.getItem("tt")
 
-
-
-
-
-function edit(id){
-        localStorage.setItem("invoice_id",id)
-}
-
-    function del(id){
-
-        var item_id=id
-        var ans=`Your information will be removed from database.`;
-        var r=confirm(ans)
-        mybody={"id":item_id}
-        if (r){
-            fetch('http://localhost/api/deleteinvoice', {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(mybody)
-            }).then(()=>{
-
-                    ffetch()
-                }
-
-            ).
-            catch(err=>console.log(err));
-
-        }
+    numofPages = Math.ceil(totallength / 5)
+    console.log("num", numofPages)
+    let op = ''
+    for (let num = 1; num <= numofPages; num++) {
+        op += `<li class="page-item"><a class="page-link" id="${num}" onclick="NewPage(${num})">${num}</a></li>`
     }
-    function ffetch(){
-        fetch("http://localhost/api/companylist").then(res=>res.json()).then(data=>{
+    page.innerHTML = op
+    var lp = localStorage.getItem("allIDs1")
+    var sp = lp.split(',')
+    console.log("sort", sp.sort((a, b) => a - b))
+
+    function NewPage(id) {
+        let Starting_Inv_ID = (id - 1) * 5
+        var storedId = sp.sort((a, b) => a - b);
+
+
+        fetch("http://localhost/api/invoicepages?offset=" + storedId[Starting_Inv_ID] + "&limit=5").then(res => res.json()).then(data => {
+            tbody = document.getElementById("invoice_details_table")
+            localStorage.setItem("total length1", data.data.length)
+            op = "<tr>"
+
+            data.data.forEach(function (data, index) {
                 console.log(data)
-                tbody=document.getElementById('abc')
-                console.log('tbody',tbody)
-                localStorage.setItem("total length1",data.data.length)
-                minarr1=new Array()
-                let op="<tr>"
-                var c=new Array()
-                var ind=0
-                data.data.forEach(function (data){
+                op += `<th scope="row">${index + 1}</th>`
+                op += `<td>InvoiceItem${data['id']}</td>`
+                op += `<td>${data['cname']}</td>`
+                op += `<td><a class="fa fa-eye" href="preview.html#${data['id']}" ></a> </td>`
+                op += `<td><a class="fa fa-edit" href="update.html#${data['id']}" onclick="EditInvoice(${data['id']})" ></a> </td>`
+                op += `<td><a class="fa fa-trash" onclick="DeleteInvoice(${data['id']})" ></a> </td>`
+                op += "<tr>";
+                tbody.innerHTML = op;
 
 
-
-
-
-
-                        if (c.includes(data['invoice_id'])){
-                            console.log("Do nothing")
-                        }
-                        else{
-                            c.push(data['invoice_id'])
-                            op+=`<th scope="row">${ind+1}</th>`
-                            op+=`<td>InvoiceItem${data['invoice_id']}</td>`
-                            op+=`<td>${data['company_name']}</td>`
-                            op+=`<td><a class="fa fa-eye" href="preview.html#${data['invoice_id']}" onclick="aaa(${data['invoice_id']})" style="color: black;" ></a> </td>`
-                            op+=`<td><a class="fa fa-edit" href="update.html#${data['invoice_id']}" onclick="edit(${data['invoice_id']})" style="color: black;" ></a> </td>`
-                            op+=`<td><a class="fa fa-trash" onclick="del(${data['invoice_id']})" style="color: black;" ></a> </td>`
-                            op += "<tr>";
-                            tbody.innerHTML = op;
-                            localStorage.setItem("minID1", minarr1[0])
-                            var ss=JSON.stringify(minarr1)
-                            console.log(ss.length)
-                            minID1=`${data['invoice_id']}`
-                            if (`${data['invoice_id']}`< minID1){
-                                minID1=`${data['invoice_id']}`
-                            }
-                            minarr1.push(minID1)
-
-
-                            ind++
-                            localStorage.setItem("tt",c.length)
-                            localStorage.setItem("allIDs1", c);
-                            console.log('ccc',c)
-
-                        }
-
-                    }
-
-
-                )
-            console.log(minarr1)
-            }
-        )
-
-    }
-    ffetch()
-page=document.getElementById('page')
-var tl=localStorage.getItem("tt")
-var totallength=tl
-
-numofPages=Math.ceil(totallength/5)
-console.log("num",numofPages)
-op=''
-for (i=1; i<=numofPages;i++){
-    op+=`<li class="page-item"><a class="page-link" id="${i}" onclick="newpage(${i})">${i}</a></li>`
-}
-
-page.innerHTML=op
-console.log('op',op)
-var lp=localStorage.getItem("allIDs1")
-var sp=lp.split(',')
-console.log("sort",sp.sort((a,b)=>a-b))
-function newpage(id){
-    iid=(id-1)*5
-    var storedId = sp.sort((a,b)=>a-b);
-    console.log("storedid",storedId)
-
-
-    fetch("http://localhost/api/invoicepages?offset="+storedId[iid]+"&limit=5").then(res=>res.json()).then(data=>{
-        tbody = document.getElementById("abc")
-        localStorage.setItem("total length1",data.data.length)
-        op = "<tr>"
-
-        data.data.forEach(function (data, index) {
-            console.log(data)
-            op+=`<th scope="row">${index+1}</th>`
-            op+=`<td>InvoiceItem${data['id']}</td>`
-            op+=`<td>${data['cname']}</td>`
-            op+=`<td><a class="fa fa-eye" href="preview.html#${data['id']}" onclick="aaa(${data['id']})" style="color: black;" ></a> </td>`
-            op+=`<td><a class="fa fa-edit" href="update.html#${data['id']}" onclick="edit(${data['id']})" style="color: black;" ></a> </td>`
-            op+=`<td><a class="fa fa-trash" onclick="del(${data['id']})" style="color: black;" ></a> </td>`
-            op += "<tr>";
-            tbody.innerHTML = op;
-
-
+            })
         })
-    })}
+    }
 </script>
 </body>
 </html>

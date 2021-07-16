@@ -29,6 +29,7 @@ a:hover{
     color: white;
     padding-top: 3%;
     width: 25%;
+
 }
 .btn {
     cursor: pointer;
@@ -48,4 +49,26 @@ a:hover{
 }
 .btn:hover{
     font-size: 17px;
+}
+
+.container-invoice{
+    margin-top: 80px;
+    border-radius: 35px;
+    width: 45%;
+    color: white;
+    padding-left: 10px;
+    background-image: linear-gradient(to right,#2895f1,#0060b1);
+}
+
+#company_title{
+    padding-bottom: 3%;
+}
+
+.btn{
+   margin: 20px 25%;
+}
+
+.main{
+    margin-top: 20px;
+    padding-left: 350px;
 }

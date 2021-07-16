@@ -2,15 +2,20 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Invoice</title>
-    <link rel="stylesheet" href="../css/addcomp.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+    <title>Company Details</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4"
+            crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.1/css/all.css" crossorigin="anonymous">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
     <script type="text/javascript" src="../js/companylist.js"></script>
+    <link rel="stylesheet" href="../css/addcomp.css">
 </head>
 <body>
 
@@ -25,13 +30,20 @@
                 <form action="" method="post">
                     <input type="hidden" name="sno" id="sno" class="sno">
                     <div class="form-floating">
-                       Company Name:<br> <input type="text" id="cname" name="cname" class="cname" size="50" placeholder="Company Name" ><br><br>
-                       Address: <br><input type="text" id="address" name="address" class="address" size="50" placeholder="Address"><br><br>
-                       City: <br><input type="text" id="city" name="city" class="city" size="50" placeholder="City"><br><br>
-                       Email: <br><input type="text" id="email" name="email" class="email" size="50" placeholder="Email"><br><br>
-                       Contact number: <br><input type="text" id="phone" name="phone" class="phone" size="50" placeholder="Phone"><br><br>
+                        Company Name:<br> <input type="text" id="cname" name="cname" class="cname" size="50"
+                                                 placeholder="Company Name"><br><br>
+                        Address: <br><input type="text" id="address" name="address" class="address" size="50"
+                                            placeholder="Address"><br><br>
+                        City: <br><input type="text" id="city" name="city" class="city" size="50"
+                                         placeholder="City"><br><br>
+                        Email: <br><input type="text" id="email" name="email" class="email" size="50"
+                                          placeholder="Email"><br><br>
+                        Contact number: <br><input type="text" id="phone" name="phone" class="phone" size="50"
+                                                   placeholder="Phone"><br><br>
                     </div>
-                    <button type="button" id="submit" name="update" class="btn btn-primary submit" onclick="updatecomp()" style="margin: 20px 50%;">Update</button>
+                    <button type="button" id="submit" name="update" class="btn btn-primary submit"
+                            onclick="UpdateCompany()">Update
+                    </button>
                 </form>
             </div>
         </div>
@@ -51,7 +63,8 @@
     <li class="nav-item">
         <a class="nav-link active" href="companylist.html">VIEW COMPANY</a>
     </li>
-</nav><br><br>
+</nav>
+<br><br>
 
 
 <table class="table table-hover">
@@ -67,7 +80,7 @@
     </thead>
     <tbody id="comptable">
 
-</tbody>
+    </tbody>
 </table>
 
 </body>

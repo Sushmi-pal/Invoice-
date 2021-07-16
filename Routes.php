@@ -1,53 +1,52 @@
 <?php
 
 require_once './classes/Route.php';
-require_once './controller/Companycontroller.php';
-require_once './controller/Invoicecontroller.php';
+require_once './controller/CompanyController.php';
+require_once './controller/InvoiceController.php';
 
 
-
-Route::set('companycreate',function (){
-    company::companycreate();
+Route::set('companycreate', function () {
+    CompanyController::CompanyCreate();
 });
 
-Route::set('companylist',function (){
-    company::companylist();
+Route::set('companylist', function () {
+    CompanyController::CompanyList();
 });
 
-Route::set('companyupdate',function (){
-    company::companyupdate();
+Route::set('companyupdate', function () {
+    CompanyController::CompanyUpdate();
 });
 
-Route::set('companydelete',function (){
-    company::companydelete();
+Route::set('companydelete', function () {
+    CompanyController::CompanyDelete();
 });
 
-Route::set('emailvalidate',function (){
-    company::validateemail();
+Route::set('emailvalidate', function () {
+    CompanyController::ValidateEmail();
 });
 
-Route::set('invoiceupdate',function (){
-    invoicepage::invoiceupdate();
+Route::set('invoiceupdate', function () {
+    InvoiceController::InvoiceUpdate();
 });
 
-Route::set('invoicecreate',function (){
-    invoicepage::createinvoice();
+Route::set('invoicecreate', function () {
+    InvoiceController::CreateInvoice();
 });
 
-Route::set('deleteinvoice',function (){
-    invoicepage::deleteinvoice();
+Route::set('deleteinvoice', function () {
+    InvoiceController::DeleteInvoice();
 });
 
-Route::set('searchinvoice',function (){
-    invoicepage::searchinvoice();
+Route::set('searchinvoice', function () {
+    InvoiceController::SearchInvoice();
 });
 
-Route::set('invoicepages',function (){
-    invoicepage::invoicepages();
+Route::set('invoicepages', function () {
+    InvoiceController::InvoicePages();
 });
 
-Route::set('getcompany',function (){
-    company::getcompany();
+Route::set('getcompany', function () {
+    CompanyController::GetCompany();
 });
 
 

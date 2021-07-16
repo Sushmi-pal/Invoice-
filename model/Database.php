@@ -14,7 +14,7 @@ class Database
     /**
      * @return PDO
      */
-    public function connectme()
+    public function ConnectMe()
     {
         try {
             $this->pdo = new PDO("pgsql:host=$this->host,dbname=$this->db", $this->user, $this->password);
@@ -24,14 +24,16 @@ class Database
         return $this->pdo;
     }
 
+
     /**
      * @return mixed
      */
-    public function datas()
+    public function Datas()
     {
         $data = json_decode(file_get_contents("php://input"), true);
         return $data;
     }
+
 
 }
 
