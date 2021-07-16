@@ -1,5 +1,5 @@
 <?php
-require_once 'database.php';
+require_once 'db.php';
 
 
 class Invoice
@@ -21,7 +21,7 @@ class Invoice
         $this->data = $d->datas();
     }
 
-    public function create()
+    public function CreateInvoice()
     {
         header("Access-Control-Allow-Methods: POST");
         header("Access-Control-Allow-Headers: *, Access-Control-Allow-Headers, Authorization, X-Requested-With");
@@ -67,14 +67,13 @@ class Invoice
         }
     }
 
-    public function retrieveinvoice()
+    public function RetrieveInvoice()
     {
         header("Access-Control-Allow-Methods: GET");
         header("Access-Control-Allow-Credentials: true");
 
         if (isset($_GET['id'])) {
             $this->iid = $_GET['id'];
-//            $this->sql = "Select itemrest.id as item_id, itemrest.name, unit_cost, quantity, company_id, invoice.id, invoice.created_at, company1.name, address, email, contact, city, total.advance_payment, total.total_cost, total.wdiscount, total.due from itemrest inner join invoice on itemrest.invoice_id=invoice.id inner join company1 on company1.id=invoice.company_id inner join total on total.invoice_id=invoice.id where invoice.id=$this->iid";
             $this->sql = "Select itemrest.id as item_id, itemrest.name, unit_cost, quantity, company_id, invoice.id, invoice.created_at, company1.name, address, email, contact, city, total.advance_payment, total_cost, wdiscount, due from itemrest inner join invoice on itemrest.invoice_id=invoice.id inner join company1 on company1.id=invoice.company_id inner join total on total.invoice_id=invoice.id where invoice.id=$this->iid";
             $this->stmt = $this->conn->query($this->sql);
             $this->stmt->execute();
@@ -135,7 +134,7 @@ class Invoice
         }
     }
 
-    public function deleteinvoice()
+    public function DeleteInvoice()
     {
         header("Access-Control-Allow-Methods: DELETE");
         header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
@@ -155,7 +154,7 @@ class Invoice
 
     }
 
-    public function updateinvoice()
+    public function UpdateInvoice()
     {
         header("Access-Control-Allow-Methods: PUT");
         header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
@@ -172,8 +171,7 @@ class Invoice
         foreach ($a1 as $a4) {
             array_push($a3, (int)$a4['id']);
         }
-//        echo json_encode($a3); #dbma bhako itemid
-//        echo json_encode(array("s"=>$a1));
+
         $a2 = array();
 
         foreach ($this->itemarray as $v) {
@@ -219,7 +217,7 @@ class Invoice
         }
     }
 
-    public function invoicepages()
+    public function InvoicePages()
     {
         header("Access-Control-Allow-Methods: GET");
         header("Access-Control-Allow-Credentials: true");
@@ -249,20 +247,16 @@ class Invoice
         }
     }
 
-    public function searchinvoice()
+    public function SearchInvoice()
     {
         header("Access-Control-Allow-Methods: GET");
         header("Access-Control-Allow-Credentials: true");
         $kname = isset($_GET["cname"]) ? $_GET["cname"] : "";
         if ($kname) {
-//            $address = $_GET["address"];
+
             $name = $_GET["cname"];
-//            $aa = trim($address, ' ""');
             $na = trim($name, ' ""');
             $nam = strtoupper($na);
-//            $capitalAddress=strtoupper($aa);
-
-
             $sql = "Select invoice.id as iid, company1.id as cid, company1.name from invoice inner join company1 on invoice.company_id=company1.id where upper(company1.name) like '%$nam%'";
             $stmt = $this->conn->query($sql);
             $stmt->execute();
@@ -290,10 +284,10 @@ class Invoice
             echo json_encode(["message" => "cname unset"]);
         }
     }
+//    public function __destruct(){
+//        $this->conn->close();
+//    }
 
 }
 
 $i = new Invoice();
-//$i->create($conn, $data);
-//$i->retrieveinvoice($conn);
-//$i->deleteinvoice($conn, $data);

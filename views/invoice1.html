@@ -2,314 +2,228 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Invoice</title>
-    <link rel="stylesheet" href="../css/invoice1.css">
+    <title>Create Invoice</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.1/css/all.css" crossorigin="anonymous">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <link rel="stylesheet" href="../css/invoice1.css">
 </head>
-<style>
-    #invoice{
-
-        background-image: linear-gradient(to right,#2895f1,#0060b1);
-        color: white;
-        padding-top: 3%;
-        width: 85%;
-        border-radius: 5%;
-        padding-left: 5%;
-        height: 80vh;
-
-
-    }
-    .contain{
-        padding-left: 20%;
-    }
-    .new{
-        color: white !important;
-        text-decoration: none;
-    }
-    .btn{
-        color: white;
-    }
-</style>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light">
-    <li class="nav-item">
-        <a class="nav-link" href="addcompany.html">NEW COMPANY</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link active" href="invoice1.html">NEW INVOICE</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="index.html">VIEW INVOICE</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="companylist.html">VIEW COMPANY</a>
-    </li>
-</nav><br><br>
+    <ul>
+        <li class="nav-item">
+            <a class="nav-link" href="addcompany.html">NEW COMPANY</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link active" href="invoice1.html">NEW INVOICE</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="index.html">VIEW INVOICE</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="companylist.html">VIEW COMPANY</a>
+        </li>
+    </ul>
+</nav>
+<br><br>
 <div class="contain">
-<div id="invoice">
+    <div id="invoice">
 
 
-<form id="addform" method="post" >
-    <div id="item-container">
+        <form id="addform" method="post">
+            <div id="item-container">
 
+            </div>
+
+            <a id="add-new-item">Add new item</a>
+
+
+        </form>
+        <div id="items"></div>
+        <label for="cost">Cost without discount</label><br>
+        <input type="text" id="cost" name="cost" class="cost" readonly><br>
+
+        <label for="discount">Discount in %</label><br>
+        <input type="number" id="discount" name="discount" class="discountcost" size="50" value=10><br>
+
+        <label for="tax">Tax %</label><br>
+        <input type="number" id="tax" name="tax" class="tax" size="50" value=5><br>
+
+        <label for="dcost">Cost with discount and tax</label><br>
+        <input type="text" id="dcost" name="dcost" class="dcost" readonly><br>
+
+        <label for="advance">Advance payment</label><br>
+        <input type="text" id="advance" name="advance" class="advance" onkeypress="AdvanceValue()"
+               onkeyup="AdvanceValue()" value="0"><br>
+
+        <label for="due">Due amount</label><br>
+        <input type="text" id="due" name="due" class="due"><br>
+
+        <label for="company">Your company:</label>
+        <select id="company"></select>
+        <a class="new" href="addcompany.html">Add new</a><br>
+
+
+        <a class="btn btn-outline-info" type="button" id="submit" name="submit" onclick="CreateInvoice()">Submit</a>
     </div>
-
-    <a id="add-new-item">Add new item</a>
-
-
-</form>
-<div id="items"></div>
-<label for="cost">Cost without discount</label><br>
-<input type="text" id="cost" name="cost" class="cost" readonly><br>
-
-<label for="discount">Discount in %</label><br>
-<input type="number" id="discount" name="discount" class="discountcost" size="50" value=10><br>
-
-<label for="tax">Tax %</label><br>
-<input type="number" id="tax" name="tax" class="tax" size="50" value=5><br>
-
-<label for="dcost">Cost with discount and tax</label><br>
-<input type="text" id="dcost" name="dcost" class="dcost"  readonly><br>
-
-<label for="advance">Advance payment</label><br>
-<input type="text" id="advance" name="advance" class="advance" onkeypress="advancevalue()" onkeyup="advancevalue()" value="0"><br>
-
-<label for="due">Due amount</label><br>
-<input type="text" id="due" name="due" class="due"><br>
-
-<label for="company">Your company:</label>
-<select  id="company"></select>
-<a class="new" href="addcompany.html">Add new</a><br>
-
-
-<a class="btn btn-outline-info"  type="button" id="submit" name="submit" onclick="find()">Submit</a>
-</div>
 </div>
 <script>
 
-    let i = 1;
+    let Increment = 1;
     document.getElementById('add-new-item').onclick = function () {
         let template = `
-<input type="text" id="iname" name="iname[]" placeholder="Item Name">
-  <input type="number" id="unit_cost" name="cost[]" onkeypress="itemvalue()" onkeyup="itemvalue()"placeholder="Unit cost">
-  <input type="number" id="quantity" name="qty[]" onkeypress="itemvalue()" onkeyup="itemvalue()"placeholder="Quantity">
-<button type="button" id="bt" onclick="return this.parentNode.remove();">Delete</button>`;
-
+        <input type="text" id="iname" name="iname[]" placeholder="Item Name">
+        <input type="number" id="unit_cost" name="cost[]" onkeypress="ItemValue()" onkeyup="ItemValue()"placeholder="Unit cost">
+        <input type="number" id="quantity" name="qty[]" onkeypress="ItemValue()" onkeyup="ItemValue()"placeholder="Quantity">
+        <button type="button" id="bt" onclick="return this.parentNode.remove();">Delete</button>`;
         let container = document.getElementById('item-container');
         let div = document.createElement('div');
         div.innerHTML = template;
         container.appendChild(div);
-
-        i++;
+        Increment++;
     }
 
-    function find() {
+    function CreateInvoice() {
         var item = []
         var value = $('#addform').serialize()
-        console.log(value)
-        var arr = value.split('&')
-        var aa = new Array()
-        var em = {}
-        arr.forEach(function (data) {
-            aa.push(data.split("=")[1])
+        var ItemList = value.split('&')
+        var AllItems = new Array()
+        var ItemsJson = {}
+        ItemList.forEach(function (data) {
+            AllItems.push(data.split("=")[1])
 
         })
-        console.log(aa)
-        for (i = 0; i < aa.length; i++) {
+        for (var items = 0; items < AllItems.length; items++) {
             item.push({
-                "name": aa[i],
-                "cost": aa[i + 1],
-                "quantity": aa[i + 2]
+                "name": AllItems[items],
+                "cost": AllItems[items + 1],
+                "quantity": AllItems[items + 2]
             })
-            i = i + 2
+            items = items + 2
 
 
-            em.item = item
-
-        }
-
-        console.log('em', em)
-        localStorage.setItem("em", JSON.stringify(em))
-        console.log(typeof em)
-
-
-            var company=document.getElementById('company')
-            var opt = company.options[company.selectedIndex];
-            var cid=opt.value
-
-            var ab
-            if (aa.includes("")){
-                ab=false
-            }
-            else{
-                ab=true
-            }
-
-
-            if ( $('#item-container').children().length != 0 && ab===true) {
-                    fetch("http://localhost/api/invoicecreate", {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            itemarray:em,
-                            company_id:cid,
-                            advance:advance.value,
-                            total:cost.value,
-                            wdiscount:dcost.value,
-                            due:due.value
-
-                        })
-
-
-                    }).then(res => res.json()).then(data =>{
-                        console.log(data)
-                        localStorage.setItem("invoice_id",data['invoice_id'])
-                        alert("New invoice created")
-                        window.location.href="preview.html#"+data['invoice_id']
-                    })
-                    console.log("letmetry",document.getElementById('cost').value)
-
-
-                }
-
-            else{
-                alert("Check itemlist")
-            }
+            ItemsJson.item = item
 
         }
 
-        function advancevalue(){
-        var due=document.getElementById('due')
-            due.value=document.getElementById('dcost').value-document.getElementById('advance').value
+
+        localStorage.setItem("em", JSON.stringify(ItemsJson))
+
+
+        var company = document.getElementById('company')
+        var opt = company.options[company.selectedIndex];
+        var cid = opt.value
+
+        let CheckEmptyField;
+        if (AllItems.includes("")) {
+            CheckEmptyField = false
+        } else {
+            CheckEmptyField = true
         }
 
-        function itemvalue(){
-            var value = $('form').serialize()
-            var sp=value.split("&")
-            console.log(sp)
-            var arra=new Array()
-            sp.forEach(function (data){
-                arra.push(data.split("=")[1])
+
+        if ($('#item-container').children().length !== 0 && CheckEmptyField === true) {
+            fetch("http://localhost/api/invoicecreate", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    itemarray: ItemsJson,
+                    company_id: cid,
+                    advance: advance.value,
+                    total: cost.value,
+                    wdiscount: dcost.value,
+                    due: due.value
+
+                })
+
+
+            }).then(res => res.json()).then(data => {
+                localStorage.setItem("invoice_id", data['invoice_id'])
+                alert("New invoice created")
+                window.location.href = "preview.html#" + data['invoice_id']
             })
-            console.log(arra)
-            var totalamount=0
-            for (i=0; i<arra.length; i=i+3){
-                totalamount+=arra[i+1]*arra[i+2]
-                console.log("total",totalamount)
-            }
-            // TOTAL COST
-
-            document.getElementById('cost').value=totalamount
-            localStorage.setItem("totalamount",totalamount)
 
 
-            // DISCOUNTED COST
-            discount=document.getElementById('discount')
-            tax=document.getElementById('tax')
-            dprice=(1-(discount.value)/100)*localStorage.getItem("totalamount")
-            console.log("dprice",dprice)
-            tprice=(1+(tax.value)/100)*dprice
-            console.log("tprice",tprice)
-            dcost.value=tprice
-            localStorage.setItem("discount",discount.value)
-            localStorage.setItem("tax",tax.value)
-            localStorage.setItem("dcost",dprice)
-            localStorage.setItem("tcost",tprice)
-
-            // DUE AMOUNT
-            var due=document.getElementById('due')
-            due.value=document.getElementById('dcost').value-document.getElementById('advance').value
+        } else {
+            alert("Check itemlist")
         }
 
-    fetch("http://localhost/api/getcompany").then(res=>res.json()).then(data=> {
-        data.data.forEach(function (data,index){
-            console.log(data)
+    }
+
+    function AdvanceValue() {
+        var due = document.getElementById('due')
+        due.value = document.getElementById('dcost').value - document.getElementById('advance').value
+    }
+
+    function ItemValue() {
+        var value = $('form').serialize()
+        var ItemList = value.split("&")
+        var AllItems = []
+        ItemList.forEach(function (data) {
+            AllItems.push(data.split("=")[1])
+        })
+        var totalamount = 0
+        for (let index = 0; index < AllItems.length; index = index + 3) {
+            totalamount += AllItems[index + 1] * AllItems[index + 2]
+        }
+        // TOTAL COST
+
+        document.getElementById('cost').value = totalamount
+        localStorage.setItem("totalamount", totalamount)
+
+
+        // DISCOUNTED COST
+        discount = document.getElementById('discount')
+        tax = document.getElementById('tax')
+        dprice = (1 - (discount.value) / 100) * localStorage.getItem("totalamount")
+
+        tprice = (1 + (tax.value) / 100) * dprice
+        dcost.value = tprice
+        localStorage.setItem("discount", discount.value)
+        localStorage.setItem("tax", tax.value)
+        localStorage.setItem("dcost", dprice)
+        localStorage.setItem("tcost", tprice)
+
+        // DUE AMOUNT
+        var due = document.getElementById('due')
+        due.value = document.getElementById('dcost').value - document.getElementById('advance').value
+    }
+
+    fetch("http://localhost/api/getcompany").then(res => res.json()).then(data => {
+        data.data.forEach(function (data) {
             $('#company').append($('<option>', {
 
                 value: data['id'],
-                text : data['name']
+                text: data['name']
             }));
         });
     });
 
 
-
-var em=JSON.parse(localStorage.getItem("em"))
-    var aa=em['item']
-    var totalamount=0
-    aa.forEach(function (data){
-        totalamount+=data['cost']*data['quantity']
+    var ItemsJson = JSON.parse(localStorage.getItem("em"))
+    var ItemArray = ItemsJson['item']
+    var totalamount = 0
+    ItemArray.forEach(function (data) {
+        totalamount += data['cost'] * data['quantity']
     })
-    localStorage.setItem("totalamount",totalamount)
-
-    console.log(document.getElementById('dcost'))
+    localStorage.setItem("totalamount", totalamount)
 
 
+    var discount = document.getElementById('discount')
+    var tax = document.getElementById('tax')
+    localStorage.setItem("discount", discount.value)
+    localStorage.setItem("tax", tax.value)
 
 
-
-
-
-
-    $("#cost").click(function (){
-        var value = $('form').serialize()
-        var sp=value.split("&")
-        var arra=new Array()
-        sp.forEach(function (data){
-            arra.push(data.split("=")[1])
-        })
-        var totalamount=0
-        for (i=0; i<arra.length; i=i+3){
-            totalamount+=arra[i+1]*arra[i+2]
-        }
-        document.getElementById('cost').value=totalamount
-            localStorage.setItem("totalamount",totalamount)
-    })
-    var discount=document.getElementById('discount')
-    var tax=document.getElementById('tax')
-    localStorage.setItem("discount",discount.value)
-    localStorage.setItem("tax",tax.value)
-
-    $('#dcost').click(function (){
-        discount=document.getElementById('discount')
-        tax=document.getElementById('tax')
-        dprice=(1-(discount.value)/100)*localStorage.getItem("totalamount")
-        console.log("dprice",dprice)
-        tprice=(1+(tax.value)/100)*dprice
-        console.log("tprice",tprice)
-        dcost.value=tprice
-        localStorage.setItem("discount",discount.value)
-        localStorage.setItem("tax",tax.value)
-        localStorage.setItem("dcost",dprice)
-        localStorage.setItem("tcost",tprice)
-    })
-
-
-
-    $("#due").click(function (){
-        var advance=document.getElementById('advance')
-        localStorage.setItem("advance",advance.value)
-        due.value=dcost.value-localStorage.getItem("advance")
-    })
-
-    $("#company").click(function (){
-        var company=document.getElementById('company')
+    $("#company").click(function () {
+        var company = document.getElementById('company')
         var opt = company.options[company.selectedIndex];
-        localStorage.setItem("cid",opt.value)
+        localStorage.setItem("cid", opt.value)
     })
-
-
-
-
-
-
-
-
 
 
 </script>

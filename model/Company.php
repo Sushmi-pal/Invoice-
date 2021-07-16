@@ -1,13 +1,11 @@
 <?php
-require_once 'database.php';
-$d = new Database();
-$conn = $d->connectme();
-$data = $d->datas();
+require_once 'db.php';
+require_once './controller/Controller.php';
 
 /**
- * Class Create
+ * Class Company
  */
-class Create
+class Company
 {
     private $id;
     private $name;
@@ -19,8 +17,8 @@ class Create
     public function __construct()
     {
         $d = new Database();
-        $this->conn = $d->connectme();
-        $this->data = $d->datas();
+        $this->conn = $d->ConnectMe();
+        $this->data = $d->Datas();
         header("Access-Control-Allow-Origin: *");
         header("Access-Control-Allow-Headers: access");
         header("Content-Type: application/json; charset=UTF-8");
@@ -28,7 +26,7 @@ class Create
     }
 
 
-    public function table()
+    public function Table()
     {
         //Creating company table
         try {
@@ -51,7 +49,7 @@ class Create
     /**
      * @return array
      */
-    public function postcompany()
+    public function PostCompany()
     {
         header("Access-Control-Allow-Methods: POST");
         header("Access-Control-Allow-Headers: *, Access-Control-Allow-Headers, Authorization, X-Requested-With");
@@ -72,17 +70,14 @@ class Create
                 throw new Exception('text');
             }
         } catch (Exception $e) {
-            ini_set("display_errors", 1);
-            ini_set("log_errors", 1);
-            ini_set("error_log", "./error_log.txt");
-            trigger_error($e->getMessage(), E_USER_ERROR);
+            Controller::ErrorLog($e);
         }
 
     }
 
 
 
-    public function deletecompany()
+    public function DeleteCompany()
     {
         header("Access-Control-Allow-Methods: DELETE");
         header("Access-Control-Allow-Headers: *, Access-Control-Allow-Headers, Authorization, X-Requested-With");
@@ -110,7 +105,7 @@ class Create
         }
     }
 
-    public function updatecompany()
+    public function UpdateCompany()
     {
         header("Access-Control-Allow-Methods: PUT");
         header("Access-Control-Allow-Headers: *, Access-Control-Allow-Headers, Authorization, X-Requested-With");
@@ -129,8 +124,9 @@ class Create
         }
     }
 
-    public function emailvalidation()
+    public function EmailValidation()
     {
+        header("Access-Control-Allow-Origin: *");
         header("Access-Control-Allow-Methods: POST");
         header("Access-Control-Allow-Headers: *, Access-Control-Allow-Headers, Authorization, X-Requested-With");
         $this->email = $this->data['email'];
@@ -146,7 +142,7 @@ class Create
     }
 
 
-    public function getcompany()
+    public function GetCompany()
     {
 
         header("Access-Control-Allow-Methods: GET");
@@ -193,7 +189,7 @@ class Create
                         'contact' => $this->v['contact'],
                         'city' => $this->v['city']
                     );
-//        Push to array
+
                     array_push($this->users_arr['data'], $this->user_data);
                 }
                 echo json_encode($this->users_arr);
@@ -202,12 +198,10 @@ class Create
         }
     }
 
+//    public function __destruct(){
+//        $this->conn->close();
+//    }
+
 }
-//$d=new Database();
-//$c=new Create($d);
-//$c->table($conn);
-//$c->postcompany();
-//$c->deletecompany($conn, $data);
-//$c->updatecompany($conn, $data);
-//$c->emailvalidation($conn, $data);
+
 

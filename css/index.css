@@ -23,3 +23,12 @@ a:hover{
 .active{
     font-size: 25px;
 }
+
+#invoice_details{
+    margin-top: 50px;
+    border: 2px solid black;
+}
+
+.fa{
+    color: black;
+}
