@@ -15,16 +15,16 @@
 <nav class="navbar navbar-expand-lg navbar-light">
     <ul>
         <li class="nav-item">
-            <a class="nav-link" href="addcompany.html">NEW COMPANY</a>
+            <a class="nav-link" href="AddCompany.html">NEW COMPANY</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="invoice1.html">NEW INVOICE</a>
+            <a class="nav-link" href="Invoice.html">NEW INVOICE</a>
         </li>
         <li class="nav-item">
             <a class="nav-link active" href="index.html">VIEW INVOICE</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="companylist.html">VIEW COMPANY</a>
+            <a class="nav-link" href="CompanyList.html">VIEW COMPANY</a>
         </li>
     </ul>
 </nav>
@@ -54,32 +54,25 @@
     </table>
 </div>
 <script>
-    page = document.getElementById('page')
-    var totallength = localStorage.getItem("tt")
-
-    numofPages = Math.ceil(totallength / 5)
-    console.log("num", numofPages)
+    let page = document.getElementById('page')
+    let TotalLength = localStorage.getItem("tt")
+    NumOfPages = Math.ceil(TotalLength / 5)
     let op = ''
-    for (let num = 1; num <= numofPages; num++) {
+    for (let num = 1; num <= NumOfPages; num++) {
         op += `<li class="page-item"><a class="page-link" id="${num}" onclick="NewPage(${num})">${num}</a></li>`
     }
     page.innerHTML = op
-    var lp = localStorage.getItem("allIDs1")
-    var sp = lp.split(',')
-    console.log("sort", sp.sort((a, b) => a - b))
+    let InvoiceNum = localStorage.getItem("allIDs1")
+    let SplitByComma = InvoiceNum.split(',')
 
     function NewPage(id) {
         let Starting_Inv_ID = (id - 1) * 5
-        var storedId = sp.sort((a, b) => a - b);
-
-
+        let storedId = SplitByComma.sort((a, b) => a - b);
         fetch("http://localhost/api/invoicepages?offset=" + storedId[Starting_Inv_ID] + "&limit=5").then(res => res.json()).then(data => {
-            tbody = document.getElementById("invoice_details_table")
+            let tbody = document.getElementById("invoice_details_table")
             localStorage.setItem("total length1", data.data.length)
-            op = "<tr>"
-
+            let op = "<tr>"
             data.data.forEach(function (data, index) {
-                console.log(data)
                 op += `<th scope="row">${index + 1}</th>`
                 op += `<td>InvoiceItem${data['id']}</td>`
                 op += `<td>${data['cname']}</td>`
@@ -88,8 +81,6 @@
                 op += `<td><a class="fa fa-trash" onclick="DeleteInvoice(${data['id']})" ></a> </td>`
                 op += "<tr>";
                 tbody.innerHTML = op;
-
-
             })
         })
     }

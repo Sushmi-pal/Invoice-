@@ -14,29 +14,25 @@
 <nav class="navbar navbar-expand-lg navbar-light">
     <ul>
         <li class="nav-item">
-            <a class="nav-link" href="addcompany.html">NEW COMPANY</a>
+            <a class="nav-link" href="AddCompany.html">NEW COMPANY</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link active" href="invoice1.html">NEW INVOICE</a>
+            <a class="nav-link active" href="Invoice.html">NEW INVOICE</a>
         </li>
         <li class="nav-item">
             <a class="nav-link" href="index.html">VIEW INVOICE</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="companylist.html">VIEW COMPANY</a>
+            <a class="nav-link" href="CompanyList.html">VIEW COMPANY</a>
         </li>
     </ul>
 </nav>
 <br><br>
 <div class="contain">
     <div id="invoice">
-
-
-        <form id="addform" method="post">
+        <form id="AddForm" method="post">
             <div id="item-container">
-
             </div>
-
             <a id="add-new-item">Add new item</a>
 
 
@@ -63,7 +59,7 @@
 
         <label for="company">Your company:</label>
         <select id="company"></select>
-        <a class="new" href="addcompany.html">Add new</a><br>
+        <a class="new" href="AddCompany.html">Add new</a><br>
 
 
         <a class="btn btn-outline-info" type="button" id="submit" name="submit" onclick="CreateInvoice()">Submit</a>
@@ -86,42 +82,31 @@
     }
 
     function CreateInvoice() {
-        var item = []
-        var value = $('#addform').serialize()
-        var ItemList = value.split('&')
-        var AllItems = new Array()
-        var ItemsJson = {}
+        let item = []
+        let value = $('#AddForm').serialize()
+        let ItemList = value.split('&')
+        let AllItems = new Array()
+        let ItemsJson = {}
         ItemList.forEach(function (data) {
             AllItems.push(data.split("=")[1])
 
         })
-        for (var items = 0; items < AllItems.length; items++) {
+        for (let items = 0; items < AllItems.length; items++) {
             item.push({
                 "name": AllItems[items],
                 "cost": AllItems[items + 1],
                 "quantity": AllItems[items + 2]
             })
             items = items + 2
-
-
             ItemsJson.item = item
-
         }
-
 
         localStorage.setItem("em", JSON.stringify(ItemsJson))
-
-
-        var company = document.getElementById('company')
-        var opt = company.options[company.selectedIndex];
-        var cid = opt.value
-
+        let company = document.getElementById('company')
+        let opt = company.options[company.selectedIndex];
+        let cid = opt.value
         let CheckEmptyField;
-        if (AllItems.includes("")) {
-            CheckEmptyField = false
-        } else {
-            CheckEmptyField = true
-        }
+        CheckEmptyField = false ? AllItems.includes("") : true
 
 
         if ($('#item-container').children().length !== 0 && CheckEmptyField === true) {
@@ -155,18 +140,18 @@
     }
 
     function AdvanceValue() {
-        var due = document.getElementById('due')
+        let due = document.getElementById('due')
         due.value = document.getElementById('dcost').value - document.getElementById('advance').value
     }
 
     function ItemValue() {
-        var value = $('form').serialize()
-        var ItemList = value.split("&")
-        var AllItems = []
+        let value = $('form').serialize()
+        let ItemList = value.split("&")
+        let AllItems = []
         ItemList.forEach(function (data) {
             AllItems.push(data.split("=")[1])
         })
-        var totalamount = 0
+        let totalamount = 0
         for (let index = 0; index < AllItems.length; index = index + 3) {
             totalamount += AllItems[index + 1] * AllItems[index + 2]
         }
@@ -179,17 +164,17 @@
         // DISCOUNTED COST
         discount = document.getElementById('discount')
         tax = document.getElementById('tax')
-        dprice = (1 - (discount.value) / 100) * localStorage.getItem("totalamount")
+        let discounted_price = (1 - (discount.value) / 100) * localStorage.getItem("totalamount")
 
-        tprice = (1 + (tax.value) / 100) * dprice
-        dcost.value = tprice
+        let tax_price = (1 + (tax.value) / 100) * discounted_price
+        dcost.value = tax_price
         localStorage.setItem("discount", discount.value)
         localStorage.setItem("tax", tax.value)
-        localStorage.setItem("dcost", dprice)
-        localStorage.setItem("tcost", tprice)
+        localStorage.setItem("dcost", discounted_price)
+        localStorage.setItem("tcost", tax_price)
 
         // DUE AMOUNT
-        var due = document.getElementById('due')
+        let due = document.getElementById('due')
         due.value = document.getElementById('dcost').value - document.getElementById('advance').value
     }
 
@@ -205,23 +190,23 @@
 
 
     var ItemsJson = JSON.parse(localStorage.getItem("em"))
-    var ItemArray = ItemsJson['item']
-    var totalamount = 0
+    let ItemArray = ItemsJson['item']
+    let totalamount = 0
     ItemArray.forEach(function (data) {
         totalamount += data['cost'] * data['quantity']
     })
     localStorage.setItem("totalamount", totalamount)
 
 
-    var discount = document.getElementById('discount')
-    var tax = document.getElementById('tax')
+    let discount = document.getElementById('discount')
+    let tax = document.getElementById('tax')
     localStorage.setItem("discount", discount.value)
     localStorage.setItem("tax", tax.value)
 
 
     $("#company").click(function () {
-        var company = document.getElementById('company')
-        var opt = company.options[company.selectedIndex];
+        let company = document.getElementById('company')
+        let opt = company.options[company.selectedIndex];
         localStorage.setItem("cid", opt.value)
     })
 

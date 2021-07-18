@@ -1,5 +1,14 @@
 <?php
+
+/**
+ * Class Controller
+ */
 class Controller{
+
+    /**
+     * @param $e
+     * @method static Errorlog()
+     */
     public static function ErrorLog($e){
         ini_set("display_errors", 1);
         ini_set("log_errors", 1);

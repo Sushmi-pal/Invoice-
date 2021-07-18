@@ -1,3 +1,7 @@
 .idea/
 model/db.php
 error_log.txt
+package.json
+package-lock.json
+.eslintrc.js
+node_modules/

@@ -4,6 +4,7 @@ require_once './controller/Controller.php';
 
 /**
  * Class Company
+ * @access private
  */
 class Company
 {
@@ -63,7 +64,7 @@ class Company
             if ($this->name && $this->address && $this->email && $this->contact && $this->city) {
                 $sql = "insert into company1(name, address, email, contact, city) values('$this->name', '$this->address','$this->email','$this->contact','$this->city')";
                 $result = $this->conn->exec($sql);
-                return (array) $result;
+                return (array)$result;
 
 
             } else {
@@ -74,7 +75,6 @@ class Company
         }
 
     }
-
 
 
     public function DeleteCompany()
@@ -198,8 +198,9 @@ class Company
         }
     }
 
-    public function __destruct(){
-        $db=new Database();
+    public function __destruct()
+    {
+        $db = new Database();
         $db->closeme();
     }
 

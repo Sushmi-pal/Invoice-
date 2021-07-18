@@ -85,47 +85,44 @@
     </div>
 </div>
 <script>
-    discount = document.getElementById('discount')
-    discounted_price = document.getElementById('discounted_price')
-    tax = document.getElementById('tax')
-    tax_price = document.getElementById('tax_price')
-    grand_total = document.getElementById('grand_total')
-    if (localStorage.getItem("discount") && localStorage.getItem("tax")) {
-        discount.innerHTML = "DISCOUNT " + localStorage.getItem("discount") + "%"
-        discounted_price.innerText = localStorage.getItem("dcost")
-        tax.innerHTML = "TAX " + localStorage.getItem("tax") + "%"
-        tax_price.innerText = localStorage.getItem("tcost")
-        grand_total.innerText = localStorage.getItem("tcost")
-    } else {
-        fetch("http://localhost/api/companylist?id=" + window.location.href.split("#")[1]).then(
-            res => res.json()).then(data => {
-            discount.innerHTML = "DISCOUNT " + 10 + "%"
-            tax.innerHTML = "TAX " + 5 + "%"
-            let discount_cost = (1 - 10 / 100) * data.data[0]['total_cost']
-            discounted_price.innerText = discount_cost
-            let tax_cost = (1 + 5 / 100) * discount_cost
-            tax_price.innerText = tax_cost
-            grand_total.innerText = tax_cost
+    let discount = document.getElementById('discount')
+    let discounted_price = document.getElementById('discounted_price')
+    let tax = document.getElementById('tax')
+    let tax_price = document.getElementById('tax_price')
+    let grand_total = document.getElementById('grand_total')
+
+    fetch("http://localhost/api/companylist?id=" + window.location.href.split("#")[1]).then(
+        res => res.json()).then(data => {
+        discount.innerHTML = "DISCOUNT " + 10 + "%"
+        tax.innerHTML = "TAX " + 5 + "%"
+        let discount_cost = (1 - 10 / 100) * data.data[0]['total_cost']
+        discounted_price.innerText = discount_cost.toString()
+        let tax_cost = (1 + 5 / 100) * discount_cost
+        tax_price.innerText = tax_cost.toString()
+        grand_total.innerText = tax_cost.toString()
+    })
+
+    let total = document.getElementById('total')
+
+    fetch("http://localhost/rest/api/getdate?id=" + window.location.href.split("#")[1]).then(res => res.json()).then(
+        data => {
+            let preview = document.getElementById('preview');
+            let op = '<tr>'
+            let total_cost = 0
+            data.data.forEach((data, index) => {
+                    op += `<td >${index + 1}</td>`
+                    op += `<td >${data['item_name']}</td>`
+                    op += `<td >${data['unit_cost']}</td>`
+                    op += `<td >${data['quantity']}</td>`
+                    let cost_item = data['unit_cost'] * data['quantity']
+                    total_cost += data['unit_cost'] * data['quantity']
+                    op += `<td >${cost_item}</td>`
+                    op += `</tr>`
+                    preview.innerHTML = op;
+                    total.innerText = total_cost
+                }
+            )
         })
-    }
-    var total = document.getElementById('total')
-    $.get("http://localhost/rest/api/getdate?id=" + window.location.href.split("#")[1], function (data) {
-        let preview = document.getElementById('preview');
-        let op = '<tr>'
-        var totalcost = 0
-        data.data.forEach(function (data, index) {
-            op += `<td >${index + 1}</td>`
-            op += `<td >${data['item_name']}</td>`
-            op += `<td >${data['unit_cost']}</td>`
-            op += `<td >${data['quantity']}</td>`
-            cost_item = data['unit_cost'] * data['quantity']
-            totalcost += data['unit_cost'] * data['quantity']
-            op += `<td >${cost_item}</td>`
-            op += `</tr>`
-            preview.innerHTML = op;
-            total.innerText = totalcost
-        })
-    });
 </script>
 </body>
 </html>

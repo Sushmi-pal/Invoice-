@@ -1,4 +1,4 @@
-invoice_id = window.location.href.split('#')[1]
+let invoice_id = window.location.href.split('#')[1]
 fetch("http://localhost/api/companylist?id=" + invoice_id).then(res => res.json()).then(data => {
     $("#name").append(`${data.data[0]['company_name']}`);
     $("#address").append(`${data.data[0]['address']}, `);
@@ -14,7 +14,7 @@ fetch("http://localhost/api/companylist?id=" + invoice_id).then(res => res.json(
     } else {
         $("#invoice-id").append(`INV0${invoice_id_str}`);
     }
-    date = data.data[0]['created_at']
+    let date = data.data[0]['created_at']
     date = date.slice(0, 10).split('-').reverse().join('/')
     duedate = date.split('/')
     if (duedate[1] != 12) {

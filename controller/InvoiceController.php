@@ -3,20 +3,13 @@ require_once 'Controller.php';
 require_once './model/Invoice.php';
 
 
+/**
+ * Class InvoiceController
+ * @instance $i
+ * Catch exception if not executed in try block
+ */
 class InvoiceController extends Controller
 {
-    public static function InvoiceList()
-    {
-        $i = new Invoice();
-
-        try {
-            $i->RetrieveInvoice();
-        } catch (Exception $e) {
-            Controller::ErrorLog($e);
-        }
-
-    }
-
     public static function InvoiceUpdate()
     {
         /* Calls the updateinvoice() method of Invoice.php which is in the model directory*/

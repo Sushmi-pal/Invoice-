@@ -9,6 +9,10 @@ require_once './model/db.php';
 
 class CompanyController extends Controller
 {
+    /**
+     * $i instance of Invoice
+     * catch Exception if cannot be executed in try block
+     */
     public static function CompanyList()
     {
         /* Calling retrieveinvoice() method from Invoice.php */
@@ -22,6 +26,11 @@ class CompanyController extends Controller
     }
 
 
+    /**
+     * @instance of Company $c
+     * Executes if $result
+     * Catch Exception if not executed in try block
+     */
     public static function CompanyCreate()
     {
         $c = new Company();
@@ -37,6 +46,10 @@ class CompanyController extends Controller
     }
 
 
+    /**
+     * @instance of Company $c
+     * Catch Exception if not executed as desired
+     */
     public static function ValidateEmail()
     {
         /* For backend validation to check whether the email already exists in the database table or not */
@@ -50,6 +63,10 @@ class CompanyController extends Controller
 
     }
 
+    /**
+     * @instance $c
+     * catch exception if not executed in try block
+     */
     public static function CompanyUpdate()
     {
         /* For updating the details of company by calling updatecompany() method */
@@ -87,7 +104,7 @@ class CompanyController extends Controller
 
     public static function GetCompany()
     {
-        //Retrieve company details. It is fetched in dropdown menu in addcompany.html page
+        //Retrieve company details. It is fetched in dropdown menu in AddCompany.html page
         $c = new Company();
         try {
             $c->GetCompany();

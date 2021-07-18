@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create New Company</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.1/css/all.css" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+    <link rel="stylesheet" href="../css/addcomp.css">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light">
+    <ul>
+        <li class="nav-item">
+            <a class="nav-link active" href="AddCompany.html">NEW COMPANY</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="Invoice.html">NEW INVOICE</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="index.html">VIEW INVOICE</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="CompanyList.html">VIEW COMPANY</a>
+        </li>
+    </ul>
+</nav>
+
+<div class="main">
+    <div class="container-invoice">
+        <form id="addPostForm" action="Invoice.html" method="post">
+            <div id="company_title">
+                <h1>Company Info Page</h1>
+            </div>
+
+            <label for="Cname">Company Name</label><br>
+            <input type="text" id="Cname" name="cname" class="cname" size="50"><br>
+            <span id="SpanCname" class="error"></span> <br>
+
+            <label for="Address">Address</label><br>
+            <input type="text" id="Address" name="address" class="address" size="50"><br>
+            <span id="SpanAddress" class="error"></span> <br>
+
+            <label for="City">City</label><br>
+            <input type="text" id="City" name="city" class="city" size="50"><br>
+            <span id="SpanCity" class="error"></span> <br>
+
+            <label for="Email">Email</label><br>
+            <input type="text" id="Email" name="email" class="email" size="50"><br>
+            <span id="SpanEmail" class="error"></span> <br>
+
+            <label for="Contact">Contact num</label><br>
+            <input type="text" id="Contact" name="phone" class="phone" size="50"><br>
+            <span id="SpanContact" class="error"></span><br>
+
+            <button class="btn btn-outline-info" type="submit" id="submit" name="submit">Submit</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    function GeneralJquery(c) {
+        let a = document.getElementById(`Span${c}`)
+        $(`#${c}`).on("keyup paste", (function () {
+            if (a.innerText === `${c} field is empty`.toUpperCase()) {
+                a.innerText = ''
+            }
+        }))
+    }
+
+    GeneralJquery('Cname')
+    GeneralJquery('Address')
+    GeneralJquery('City')
+    GeneralJquery('Contact')
+    GeneralJquery('Email')
+
+
+    $(document).ready(function () {
+        $("#addPostForm").validate({
+            rules: {
+                cname: {
+                    minlength: 3
+                },
+                address: {
+                    minlength: 2
+                },
+                email: {
+                    email: true
+                },
+
+                phone: {
+                    minlength: 10
+                }
+            }
+        })
+    })
+
+    function ValidateEmail() {
+        let email = document.getElementById('Email')
+        fetch("http://localhost/api/emailvalidate", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'text/plain'
+            },
+            body: JSON.stringify({"email": email.value})
+        }).then(res => res.json()).then(data => {
+            document.getElementById('SpanEmail').innerText = data['Message']
+        })
+    }
+
+
+    function GeneralFunc(id, c) {
+        let a = document.getElementById(`Span${c}`)
+        if (id.value === '') {
+            a.innerText = `${c} field is empty`.toUpperCase()
+            return false
+        }
+        a.innerText = ''
+        return true
+    }
+
+
+    document.getElementById('addPostForm').addEventListener('submit', function (e) {
+        e.preventDefault()
+        ValidateEmail()
+        let vEmail
+        if (document.getElementById('SpanEmail').innerText === "Email address already exists") {
+            vEmail = false
+        } else {
+            vEmail = true
+        }
+        let name = document.getElementById('Cname')
+        let address = document.getElementById('Address')
+        let email = document.getElementById('Email')
+        let city = document.getElementById('City')
+        let phone = document.getElementById('Contact')
+
+        const myPost = {
+            email: email.value,
+            name: name.value,
+            address: address.value,
+            contact: phone.value,
+            city: city.value
+        }
+
+        let ValidateAddress = GeneralFunc(address, 'Address')
+        let ValidateCity = GeneralFunc(city, 'City')
+        let ValidateCname = GeneralFunc(name, 'Cname')
+        let ValidateContact = GeneralFunc(phone, 'Contact')
+        let EmailValidation = GeneralFunc(email, 'Email')
+
+
+        if (ValidateAddress && ValidateCname && EmailValidation && ValidateCity && vEmail && ValidateContact && address.value.length > 2) {
+            fetch("http://localhost/api/companycreate", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(myPost)
+            }).then(res => res.json()).then(() => {
+                alert("Your information has been saved")
+                window.location.href = "Invoice.html"
+            })
+        }
+
+
+    })
+
+    $("#Email").on("keyup keypress paste", function () {
+        ValidateEmail()
+    })
+</script>
+</body>
+</html>

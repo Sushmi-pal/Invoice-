@@ -14,16 +14,16 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-light">
     <li class="nav-item">
-        <a class="nav-link" href="addcompany.html">NEW COMPANY</a>
+        <a class="nav-link" href="AddCompany.html">NEW COMPANY</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link active" href="invoice1.html">NEW INVOICE</a>
+        <a class="nav-link active" href="Invoice.html">NEW INVOICE</a>
     </li>
     <li class="nav-item">
         <a class="nav-link" href="index.html">VIEW INVOICE</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="companylist.html">VIEW COMPANY</a>
+        <a class="nav-link" href="CompanyList.html">VIEW COMPANY</a>
     </li>
 </nav>
 <br><br>
@@ -47,7 +47,7 @@
         <input type="text" id="discounted_cost" name="discounted_cost" class="discounted_cost" readonly><br>
 
         <label for="advance">Advance payment</label><br>
-        <input type="text" id="advance" name="advance" class="advance" value="0"><br>
+        <input type="text" id="advance" name="advance" class="advance" onkeyup="AdvanceValue()" value="0"><br>
 
         <label for="due">Due amount</label><br>
         <input type="text" id="due" name="due" class="due"><br>
@@ -126,6 +126,9 @@
         }
         if ($('#item-container').children().length != 0 && ItemNum <= 1) {
             var advance = document.getElementById('advance')
+            let discounted_cost = document.getElementById('discounted_cost')
+            let due = document.getElementById('due')
+            let total_cost = document.getElementById('cost')
             fetch("http://localhost/api/invoiceupdate", {
                 method: 'POST',
                 headers: {
@@ -134,7 +137,10 @@
                 body: JSON.stringify({
                     itemarray: ItemJson,
                     invoice_id: window.location.href.split("#")[1],
-                    advance: advance.value
+                    advance: advance.value,
+                    total_cost: total_cost.value,
+                    wdiscount: discounted_cost.value,
+                    due: due.value
                 })
             }).then(res => res.json()).then(data => {
                 alert("Invoice updated")
@@ -154,8 +160,8 @@
             op += `<div>`
             op += `<input type="hidden" id="itemid" name="itemid[]" value="${data['item_id']}">`
             op += `<input type="text" id="iname" name="iname[]" value="${data['item_name']}" placeholder="Item Name">`
-            op += `<input type="number" id="unit_cost" name="cost[]" value="${data['unit_cost']}" onkeypress="itemvalue()" onkeyup="itemvalue()" placeholder="Unit cost">`
-            op += `<input type="number" id="quantity" name="qty[]" value="${data['quantity']}" onkeypress="itemvalue()" onkeyup="itemvalue()" placeholder="Quantity">`
+            op += `<input type="number" id="unit_cost" name="cost[]" value="${data['unit_cost']}" onkeypress="ItemValue()" onkeyup="ItemValue()" placeholder="Unit cost">`
+            op += `<input type="number" id="quantity" name="qty[]" value="${data['quantity']}" onkeypress="ItemValue()" onkeyup="ItemValue()" placeholder="Quantity">`
             op += `<button type="button" class="fas fa-trash-alt" id="bt" onclick="return this.parentNode.remove();"></button>`
             op += `</div>`
             ItemContainer.innerHTML = op
@@ -166,7 +172,6 @@
         localStorage.setItem("cm", data.data[0]['company_name'])
         let advance = document.getElementById('advance')
         advance.value = data.data[0]['advance_payment']
-        console.log("advance", data.data[0]['advance_payment'])
         let company = document.getElementById('company')
         company.options[company.selectedIndex].text = localStorage.getItem("cm")
     })
@@ -180,7 +185,7 @@
             ItemArray.push(data.split("=")[1])
         })
         let totalamount = 0
-        for (let index = 0; index < ItemArray.length; index = i + 4) {
+        for (let index = 0; index < ItemArray.length; index = index + 4) {
             totalamount += ItemArray[index + 2] * ItemArray[index + 3]
         }
         // TOTAL COST
@@ -202,6 +207,14 @@
         let due = document.getElementById('due')
         localStorage.setItem("advance", advance.value)
         due.value = discounted_cost.value - localStorage.getItem("advance")
+    }
+
+    function AdvanceValue() {
+        let due = document.getElementById('due')
+        let discounted_cost = document.getElementById('discounted_cost')
+        let advance = document.getElementById('advance')
+        due.value = discounted_cost.value - advance.value
+        due.value = discounted_cost.value - advance.value
     }
 </script>
 </body>

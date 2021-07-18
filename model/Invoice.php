@@ -2,6 +2,10 @@
 require_once 'db.php';
 
 
+/**
+ * Class Invoice
+ * @access private
+ */
 class Invoice
 {
     private $company_id;
@@ -161,6 +165,9 @@ class Invoice
         $this->invoice_id = $this->data['invoice_id'];
         $this->itemarray = $this->data['itemarray'];
         $this->advance = $this->data['advance'];
+        $this->total_cost = $this->data['total_cost'];
+        $this->wdiscount = $this->data['wdiscount'];
+        $this->due = $this->data['due'];
 //        delete item
         $this->sql = "select itemrest.id from itemrest inner join invoice on itemrest.invoice_id=invoice.id where invoice.id=$this->invoice_id";
         $this->stmt = $this->conn->query($this->sql);
@@ -208,7 +215,7 @@ class Invoice
             }
 
         }
-        $this->sql = "update total set advance_payment=$this->advance where invoice_id=$this->invoice_id";
+        $this->sql = "update total set advance_payment=$this->advance, total_cost=$this->total_cost, wdiscount=$this->wdiscount, due=$this->due where invoice_id=$this->invoice_id";
         $ret_ad = $this->conn->exec($this->sql);
         if ($ret_ad) {
             echo json_encode(array("Success" => "Invoice updated"));
@@ -285,8 +292,9 @@ class Invoice
         }
     }
 
-    public function __destruct(){
-        $db=new Database();
+    public function __destruct()
+    {
+        $db = new Database();
         $db->closeme();
     }
 
