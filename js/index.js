@@ -1,4 +1,4 @@
-let CommonName=localStorage.getItem("CommonName")
+let CommonName = localStorage.getItem("CommonName")
 function EditInvoice(id) {
     localStorage.setItem("invoice_id", id)
 }

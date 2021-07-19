@@ -1,6 +1,6 @@
 let loc = window.location.href
 let name = ((loc.split('&')[0]).split('=')[1]).toUpperCase()
-let CommonName=localStorage.getItem("CommonName")
+let CommonName = localStorage.getItem("CommonName")
 function SearchByCname() {
     fetch(CommonName+"searchinvoice?cname=" + `"${name}"`).then(res => res.json()).then(data => {
         let tbody = document.getElementById("invoice_details_table")

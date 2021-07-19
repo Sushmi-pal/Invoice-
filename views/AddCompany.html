@@ -62,7 +62,7 @@
 
 <script>
     localStorage.setItem("CommonName", "http://localhost/api/")
-    var CommonName=localStorage.getItem("CommonName")
+    let CommonName = localStorage.getItem("CommonName")
     function GeneralJquery(c) {
         let a = document.getElementById(`Span${c}`)
         $(`#${c}`).on("keyup paste", (function () {

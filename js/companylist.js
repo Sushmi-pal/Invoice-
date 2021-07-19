@@ -1,4 +1,4 @@
-let CommonName=localStorage.getItem("CommonName")
+let CommonName = localStorage.getItem("CommonName")
 function CompanyList() {
     fetch(CommonName+"getcompany").then(res => res.json()).then(data => {
         let CompanyTable = document.getElementById('CompanyTable')
