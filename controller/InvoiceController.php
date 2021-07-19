@@ -10,6 +10,7 @@ require_once './model/Invoice.php';
  */
 class InvoiceController extends Controller
 {
+
     public static function InvoiceUpdate()
     {
         /* Calls the updateinvoice() method of Invoice.php which is in the model directory*/

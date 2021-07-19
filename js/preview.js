@@ -1,5 +1,6 @@
 let invoice_id = window.location.href.split('#')[1]
-fetch("http://localhost/api/companylist?id=" + invoice_id).then(res => res.json()).then(data => {
+let CommonName=localStorage.getItem("CommonName")
+fetch(CommonName+"companylist?id=" + invoice_id).then(res => res.json()).then(data => {
     $("#name").append(`${data.data[0]['company_name']}`);
     $("#address").append(`${data.data[0]['address']}, `);
     $("#address").append(`${data.data[0]['city']}`);

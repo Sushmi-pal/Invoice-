@@ -1,5 +1,6 @@
+let CommonName=localStorage.getItem("CommonName")
 function CompanyList() {
-    fetch("http://localhost/api/getcompany").then(res => res.json()).then(data => {
+    fetch(CommonName+"getcompany").then(res => res.json()).then(data => {
         let CompanyTable = document.getElementById('CompanyTable')
         let op = "<tr>"
         data.data.forEach(function (data, index) {
@@ -26,7 +27,7 @@ function EditCompany(id) {
     let phone = document.getElementById('phone')
     localStorage.setItem("CompanyId", id)
 
-    fetch("http://localhost/api/getcompany?id=" + id).then(res => res.json()).then(data => {
+    fetch(CommonName+"getcompany?id=" + id).then(res => res.json()).then(data => {
         cname.value = data.data[0]['name']
         address.value = data.data[0]['address']
         email.value = data.data[0]['email']
@@ -52,7 +53,7 @@ function UpdateCompany() {
 
     }
 
-    fetch("http://localhost/api/companyupdate", {
+    fetch(window.CommonName+"companyupdate", {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
@@ -71,7 +72,7 @@ function DeleteCompany(id) {
         id: id
     }
     if (Confirmation) {
-        fetch("http://localhost/api/companydelete", {
+        fetch(CommonName+"companydelete", {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'

@@ -66,7 +66,7 @@
     </div>
 </div>
 <script>
-
+    let CommonName=localStorage.getItem("CommonName")
     let Increment = 1;
     document.getElementById('add-new-item').onclick = function () {
         let template = `
@@ -110,7 +110,7 @@
 
 
         if ($('#item-container').children().length !== 0 && CheckEmptyField === true) {
-            fetch("http://localhost/api/invoicecreate", {
+            fetch(CommonName+"invoicecreate", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -178,7 +178,7 @@
         due.value = document.getElementById('dcost').value - document.getElementById('advance').value
     }
 
-    fetch("http://localhost/api/getcompany").then(res => res.json()).then(data => {
+    fetch(CommonName+"getcompany").then(res => res.json()).then(data => {
         data.data.forEach(function (data) {
             $('#company').append($('<option>', {
 

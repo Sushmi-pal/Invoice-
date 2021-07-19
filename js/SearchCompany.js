@@ -1,8 +1,8 @@
 let loc = window.location.href
 let name = ((loc.split('&')[0]).split('=')[1]).toUpperCase()
-
+let CommonName=localStorage.getItem("CommonName")
 function SearchByCname() {
-    fetch("http://localhost/api/searchinvoice?cname=" + `"${name}"`).then(res => res.json()).then(data => {
+    fetch(CommonName+"searchinvoice?cname=" + `"${name}"`).then(res => res.json()).then(data => {
         let tbody = document.getElementById("invoice_details_table")
         let op = "<tr>"
         let SearchIid = []
@@ -27,7 +27,7 @@ SearchByCname()
 function NewPage(id) {
     let Starting_Inv_ID = (id - 1) * 5
     let storedId = window.search_iid;
-    fetch("http://localhost/api/invoicepages?offset=" + storedId[Starting_Inv_ID] + "&limit=5").then(res => res.json()).then(data => {
+    fetch(CommonName+"invoicepages?offset=" + storedId[Starting_Inv_ID] + "&limit=5").then(res => res.json()).then(data => {
         let tbody = document.getElementById("invoice_details_table")
         localStorage.setItem("total length1", data.data.length)
         let op = "<tr>"
@@ -50,7 +50,7 @@ function DelInvoice(id) {
     let confirmation = confirm(DeleteInfo)
     let body = {"id": id}
     if (confirmation) {
-        fetch('http://localhost/api/deleteinvoice', {
+        fetch(CommonName+'deleteinvoice', {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'

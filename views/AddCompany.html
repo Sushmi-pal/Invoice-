@@ -61,6 +61,8 @@
 </div>
 
 <script>
+    localStorage.setItem("CommonName", "http://localhost/api/")
+    var CommonName=localStorage.getItem("CommonName")
     function GeneralJquery(c) {
         let a = document.getElementById(`Span${c}`)
         $(`#${c}`).on("keyup paste", (function () {
@@ -99,7 +101,7 @@
 
     function ValidateEmail() {
         let email = document.getElementById('Email')
-        fetch("http://localhost/api/emailvalidate", {
+        fetch(CommonName+"emailvalidate", {
             method: 'POST',
             headers: {
                 'Content-Type': 'text/plain'
@@ -111,7 +113,7 @@
     }
 
 
-    function GeneralFunc(id, c) {
+    function GeneralValidation(id, c) {
         let a = document.getElementById(`Span${c}`)
         if (id.value === '') {
             a.innerText = `${c} field is empty`.toUpperCase()
@@ -145,15 +147,15 @@
             city: city.value
         }
 
-        let ValidateAddress = GeneralFunc(address, 'Address')
-        let ValidateCity = GeneralFunc(city, 'City')
-        let ValidateCname = GeneralFunc(name, 'Cname')
-        let ValidateContact = GeneralFunc(phone, 'Contact')
-        let EmailValidation = GeneralFunc(email, 'Email')
+        let ValidateAddress = GeneralValidation(address, 'Address')
+        let ValidateCity = GeneralValidation(city, 'City')
+        let ValidateCname = GeneralValidation(name, 'Cname')
+        let ValidateContact = GeneralValidation(phone, 'Contact')
+        let EmailValidation = GeneralValidation(email, 'Email')
 
 
         if (ValidateAddress && ValidateCname && EmailValidation && ValidateCity && vEmail && ValidateContact && address.value.length > 2) {
-            fetch("http://localhost/api/companycreate", {
+            fetch(CommonName+"companycreate", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

@@ -62,6 +62,7 @@
     </div>
 </div>
 <script>
+    let CommonName=localStorage.getItem("CommonName")
     let increment = 1;
     document.getElementById('add-new-item').onclick = function () {
         let template = `
@@ -86,7 +87,7 @@
     })
     localStorage.setItem("totalamount", totalamount)
     $(document).ready(function () {
-        $.get("http://localhost/rest/api/getcompany", function (data) {
+        $.get(CommonName+"getcompany", function (data) {
             data.data.forEach(function (data) {
                 $('#company').append($('<option>', {
                     value: data['id'],
@@ -129,7 +130,7 @@
             let discounted_cost = document.getElementById('discounted_cost')
             let due = document.getElementById('due')
             let total_cost = document.getElementById('cost')
-            fetch("http://localhost/api/invoiceupdate", {
+            fetch(CommonName+"invoiceupdate", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -152,7 +153,7 @@
     }
 
 
-    fetch("http://localhost/api/companylist?id=" + window.location.href.split("#")[1]).then(res => res.json()).then(data => {
+    fetch(window.CommonName+"companylist?id=" + window.location.href.split("#")[1]).then(res => res.json()).then(data => {
 
         let op = ""
         var ItemContainer = document.getElementById('item-container')
