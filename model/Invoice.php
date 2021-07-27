@@ -15,6 +15,9 @@ class Invoice
     private $wdiscount;
     private $due;
 
+    /**
+     * Invoice constructor.
+     */
     public function __construct()
     {
         header("Access-Control-Allow-Origin: *");
@@ -25,6 +28,9 @@ class Invoice
         $this->data = $d->datas();
     }
 
+    /**
+     * Store the invoice information
+     */
     public function CreateInvoice()
     {
         header("Access-Control-Allow-Methods: POST");
@@ -35,7 +41,6 @@ class Invoice
         $this->total_cost = $this->data['total'];
         $this->wdiscount = $this->data['wdiscount'];
         $this->due = $this->data['due'];
-
         $this->sql = "insert into invoice(company_id) values ($this->company_id)";
         $result = $this->conn->exec($this->sql);
         $this->sql = "select id from invoice";
@@ -51,7 +56,7 @@ class Invoice
                 try {
                     if ($name != " " || cost != " " || $quantity != " ") {
                         $this->sql = "insert into itemrest(invoice_id, name, unit_cost, quantity) values ($invoiceid, '$name',$cost, $quantity)";
-                        $r4 = $this->conn->exec($this->sql);
+                        $result_itemrest = $this->conn->exec($this->sql);
                     }
 
                 } catch (Exception $e) {
@@ -59,18 +64,20 @@ class Invoice
                 }
 
             }
-
         }
         $this->sql = "insert into total(invoice_id, advance_payment, total_cost, wdiscount, due) values($invoiceid, $this->advance, $this->total_cost, $this->wdiscount, $this->due)";
-        $rr = $this->conn->exec($this->sql);
+        $result_total = $this->conn->exec($this->sql);
 
-        if ($result && $r4 && $rr) {
+        if ($result && $result_itemrest && $result_total) {
             echo json_encode(array("Success" => "Invoice Created", "invoice_id" => $invoiceid));
         } else {
             echo json_encode(array("Fail" => "Not created"));
         }
     }
 
+    /**
+     * Get all the invoices
+     */
     public function RetrieveInvoice()
     {
         header("Access-Control-Allow-Methods: GET");
@@ -138,6 +145,9 @@ class Invoice
         }
     }
 
+    /**
+     * Delete the invoice and all the columns related to invoice id
+     */
     public function DeleteInvoice()
     {
         header("Access-Control-Allow-Methods: DELETE");
@@ -145,12 +155,12 @@ class Invoice
 
         $this->id = $this->data['id'];
         $this->sql = "delete from itemrest where invoice_id=$this->id";
-        $this->result = $this->conn->exec($this->sql);
+        $this->result_itemrest = $this->conn->exec($this->sql);
         $this->sql = "delete from invoice where id=$this->id";
-        $this->result1 = $this->conn->exec($this->sql);
+        $this->result_invoice = $this->conn->exec($this->sql);
         $this->sql = "delete from total where invoice_id=$this->id";
-        $this->result2 = $this->conn->exec($this->sql);
-        if ($this->result && $this->result1 && $this->result2) {
+        $this->result_total = $this->conn->exec($this->sql);
+        if ($this->result_itemrest && $this->result_invoice && $this->result_total) {
             echo json_encode(array("Success" => "Records deleted successfully"));
         } else {
             echo json_encode(array("Fail" => "No such records found"));
@@ -158,6 +168,9 @@ class Invoice
 
     }
 
+    /**
+     * Update invoice
+     */
     public function UpdateInvoice()
     {
         header("Access-Control-Allow-Methods: PUT");
@@ -224,6 +237,10 @@ class Invoice
         }
     }
 
+    /**
+     * For pagination
+     */
+
     public function InvoicePages()
     {
         header("Access-Control-Allow-Methods: GET");
@@ -253,6 +270,10 @@ class Invoice
             echo json_encode(["Wrong" => "Check the url"]);
         }
     }
+
+    /**
+     * Search on the basis of company name
+     */
 
     public function SearchInvoice()
     {

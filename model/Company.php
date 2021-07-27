@@ -15,11 +15,16 @@ class Company
     private $contact;
     private $city;
 
+    /**
+     *
+     * Company constructor
+     *
+     */
     public function __construct()
     {
-        $d = new Database();
-        $this->conn = $d->ConnectMe();
-        $this->data = $d->Datas();
+        $database = new Database();
+        $this->conn = $database->ConnectMe();
+        $this->data = $database->Datas();
         header("Access-Control-Allow-Origin: *");
         header("Access-Control-Allow-Headers: access");
         header("Content-Type: application/json; charset=UTF-8");
@@ -27,6 +32,11 @@ class Company
     }
 
 
+    /**
+     *
+     * Create company table
+     *
+     */
     public function Table()
     {
         //Creating company table
@@ -34,12 +44,12 @@ class Company
             $sql = "drop table if exists Company1 cascade";
             $this->conn->exec($sql);
             $sql = "CREATE TABLE Company1(
-	id serial unique,
-	name varchar(255),
-	address varchar(255),
-	email varchar(50),
-	contact varchar(20),
-	city varchar(255));";
+            id serial unique,
+            name varchar(255),
+            address varchar(255),
+            email varchar(50),
+            contact varchar(20),
+            city varchar(255));";
             $this->conn->exec($sql);
         } catch (Exception $e) {
             echo $e->getMessage();
@@ -48,6 +58,7 @@ class Company
 
 
     /**
+     * Store details of company
      * @return array
      */
     public function PostCompany()
@@ -77,6 +88,9 @@ class Company
     }
 
 
+    /**
+     * Delete company detail
+     */
     public function DeleteCompany()
     {
         header("Access-Control-Allow-Methods: DELETE");
@@ -92,18 +106,22 @@ class Company
         }
         if ($aa) {
             $sql = "delete from total where invoice_id=$aa";
-            $this->result2 = $this->conn->exec($sql);
+            $this->result_total = $this->conn->exec($sql);
             $sql = "delete from itemrest where invoice_id = $aa";
-            $this->result3 = $this->conn->exec($sql);
+            $this->result_itemrest = $this->conn->exec($sql);
         }
         $sql = "delete from company1 where id=$id";
-        $this->result4 = $this->conn->exec($sql);
-        if ($this->result4) {
+        $this->result_company = $this->conn->exec($sql);
+        if ($this->result_company) {
             echo json_encode(array("Success" => "Deleted successfully"));
         } else {
             echo json_encode(array("Fail" => "fail"));
         }
     }
+
+    /**
+     * Update the company table
+     */
 
     public function UpdateCompany()
     {
@@ -124,6 +142,12 @@ class Company
         }
     }
 
+    /**
+     *
+     * Validates whether the email address already exists in database
+     *
+     */
+
     public function EmailValidation()
     {
         header("Access-Control-Allow-Origin: *");
@@ -133,8 +157,8 @@ class Company
         $this->sql = "select * from company1 where email='$this->email'";
         $this->stmt = $this->conn->query($this->sql);
         $this->stmt->execute();
-        $this->data1 = $this->stmt->fetchAll();
-        if (count($this->data1) > 0) {
+        $this->company_data = $this->stmt->fetchAll();
+        if (count($this->company_data) > 0) {
             echo json_encode(array("Message" => "Email address already exists"));
         } else {
             echo json_encode(array("Message" => ""));
@@ -142,9 +166,11 @@ class Company
     }
 
 
+    /**
+     * Get the details of company
+     */
     public function GetCompany()
     {
-
         header("Access-Control-Allow-Methods: GET");
         header("Access-Control-Allow-Credentials: true");
         if (isset($_GET['id'])) {
