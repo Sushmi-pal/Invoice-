@@ -85,8 +85,9 @@ class Invoice
 
         if (isset($_GET['id'])) {
             $this->iid = $_GET['id'];
-            $this->sql = "Select itemrest.id as item_id, itemrest.name, unit_cost, quantity, company_id, invoice.id, invoice.created_at, company1.name, address, email, contact, city, total.advance_payment, total_cost, wdiscount, due from itemrest inner join invoice on itemrest.invoice_id=invoice.id inner join company1 on company1.id=invoice.company_id inner join total on total.invoice_id=invoice.id where invoice.id=$this->iid";
-            $this->stmt = $this->conn->query($this->sql);
+            $this->sql = "Select itemrest.id as item_id, itemrest.name, unit_cost, quantity, company_id, invoice.id, invoice.created_at, company1.name, address, email, contact, city, total.advance_payment, total_cost, wdiscount, due from itemrest inner join invoice on itemrest.invoice_id=invoice.id inner join company1 on company1.id=invoice.company_id inner join total on total.invoice_id=invoice.id where invoice.id=:invoice_id";
+            $this->stmt=$this->conn->prepare($this->sql);
+            $this->stmt->bindValue(':invoice_id',$this->iid);
             $this->stmt->execute();
             $this->data = $this->stmt->fetchAll();
             $this->suser = array();
@@ -116,7 +117,19 @@ class Invoice
             }
             echo json_encode($this->suser);
         } else {
-            $this->sql = "Select itemrest.id as item_id, itemrest.name, unit_cost, quantity, company_id, invoice.id, invoice.created_at, company1.name, address, email, contact, city from itemrest inner join invoice on itemrest.invoice_id=invoice.id inner join company1 on company1.id=invoice.company_id order by company1.name";
+            if (isset($_GET['sort'])){
+                $field=$_GET['sort'];
+            }
+            else{
+                $field = 'company1.name';
+            }
+            if (isset($_GET['order'])){
+                $ordertype = ($_GET['order'] == 'desc')? 'desc' : 'asc';
+            }
+            else{
+                $ordertype='asc';
+            }
+            $this->sql = "Select itemrest.id as item_id, itemrest.name, unit_cost, quantity, company_id, invoice.id, invoice.created_at, company1.name, address, email, contact, city from itemrest inner join invoice on itemrest.invoice_id=invoice.id inner join company1 on company1.id=invoice.company_id order by $field $ordertype";
             $this->stmt = $this->conn->query($this->sql);
             $this->stmt->execute();
             $this->data = $this->stmt->fetchAll();
@@ -246,9 +259,21 @@ class Invoice
         header("Access-Control-Allow-Methods: GET");
         header("Access-Control-Allow-Credentials: true");
         if (isset($_GET['offset']) & isset($_GET['limit'])) {
+            if (isset($_GET['sort'])){
+                $field=$_GET['sort'];
+            }
+            else{
+                $field = 'company1.name';
+            }
+            if (isset($_GET['order'])){
+                $ordertype = ($_GET['order'] == 'desc')? 'desc' : 'asc';
+            }
+            else{
+                $ordertype='asc';
+            }
             $uid = $_GET['offset'];
             $limit = $_GET['limit'];
-            $sql = "Select invoice.id,company1.name, company1.id as cid from invoice inner join company1 on invoice.company_id=company1.id where invoice.id>=$uid limit $limit";
+            $sql = "Select invoice.id,company1.name, company1.id as cid from invoice inner join company1 on invoice.company_id=company1.id where invoice.id>=$uid limit $limit order by $field $ordertype";
             $stmt = $this->conn->query($sql);
             $stmt->execute();
             $data = $stmt->fetchAll();

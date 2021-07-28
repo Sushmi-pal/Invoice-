@@ -1,6 +1,7 @@
 let CommonName = localStorage.getItem("CommonName")
-function CompanyList() {
-    fetch(CommonName+"getcompany").then(res => res.json()).then(data => {
+
+function CompanyList(column_name, order) {
+    fetch(CommonName + "getcompany?sort=" + column_name + "&order=" + order).then(res => res.json()).then(data => {
         let CompanyTable = document.getElementById('CompanyTable')
         let op = "<tr>"
         data.data.forEach(function (data, index) {
@@ -21,13 +22,13 @@ CompanyList()
 
 function EditCompany(id) {
     let cname = document.getElementById('cname')
-    let address = document.getElementById('address')
-    let email = document.getElementById('email')
-    let city = document.getElementById('city')
+    let address = document.getElementById('company_address')
+    let email = document.getElementById('company_email')
+    let city = document.getElementById('company_city')
     let phone = document.getElementById('phone')
     localStorage.setItem("CompanyId", id)
 
-    fetch(CommonName+"getcompany?id=" + id).then(res => res.json()).then(data => {
+    fetch(CommonName + "getcompany?id=" + id).then(res => res.json()).then(data => {
         cname.value = data.data[0]['name']
         address.value = data.data[0]['address']
         email.value = data.data[0]['email']
@@ -38,7 +39,7 @@ function EditCompany(id) {
 
 function UpdateCompany() {
     let name = document.getElementById('cname')
-    let address = document.getElementById('address')
+    let address = document.getElementById('company_address')
     let email = document.getElementById('email')
     let city = document.getElementById('city')
     let phone = document.getElementById('phone')
@@ -53,7 +54,7 @@ function UpdateCompany() {
 
     }
 
-    fetch(window.CommonName+"companyupdate", {
+    fetch(window.CommonName + "companyupdate", {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
@@ -72,7 +73,7 @@ function DeleteCompany(id) {
         id: id
     }
     if (Confirmation) {
-        fetch(CommonName+"companydelete", {
+        fetch(CommonName + "companydelete", {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
@@ -86,3 +87,4 @@ function DeleteCompany(id) {
         alert("Company details not deleted")
     }
 }
+

@@ -30,11 +30,11 @@
                     <div class="form-floating">
                         Company Name:<br> <input type="text" id="cname" name="cname" class="cname" size="50"
                                                  placeholder="Company Name"><br><br>
-                        Address: <br><input type="text" id="address" name="address" class="address" size="50"
+                        Address: <br><input type="text" id="company_address" name="address" class="address" size="50"
                                             placeholder="Address"><br><br>
-                        City: <br><input type="text" id="city" name="city" class="city" size="50"
+                        City: <br><input type="text" id="company_city" name="city" class="city" size="50"
                                          placeholder="City"><br><br>
-                        Email: <br><input type="text" id="email" name="email" class="email" size="50"
+                        Email: <br><input type="text" id="company_email" name="email" class="email" size="50"
                                           placeholder="Email"><br><br>
                         Contact number: <br><input type="text" id="phone" name="phone" class="phone" size="50"
                                                    placeholder="Phone"><br><br>
@@ -68,16 +68,72 @@
 <table class="table table-hover">
     <thead>
     <tr>
-        <th scope="col">SN</th>
-        <th scope="col">Name</th>
-        <th scope="col">Address</th>
-        <th scope="col">Email</th>
-        <th scope="col">Contact</th>
-        <th scope="col">Actions</th>
+        <th scope="col" class="column_sort" id="id">SN</span></th>
+        <th scope="col" class="column_sort" id="name">Name</span></th>
+        <th scope="col" class="column_sort" id="address">Address</span></th>
+        <th scope="col" class="column_sort" id="email">Email</span></th>
+        <th scope="col" class="column_sort" id="contact">Contact</span></th>
+        <th scope="col" class="column_sort">Actions</th>
     </tr>
     </thead>
     <tbody id="CompanyTable">
     </tbody>
 </table>
+<script>
+    $('.column_sort').on('click', function () {
+        $('.updown').remove()
+        let column_name = $(this).attr('id')
+        var order = localStorage.getItem('order')
+        var arrow = ''
+        if (order == 'desc' || order == undefined) {
+            arrow = ''
+            arrow = '<span class="updown fa fa-arrow-down"></span>'
+            localStorage.setItem('order', 'asc')
+
+        } else {
+            arrow = ''
+            arrow = '<span class="updown fa fa-arrow-up"></span>'
+            localStorage.setItem('order', 'desc')
+        }
+        var namefield = ''
+        namefield += $(this).html()
+        namefield += arrow
+        $(this).html(namefield)
+        CompanyList(column_name, localStorage.getItem('order'))
+
+
+    })
+
+
+    // $('.column_sort').on ('click',function (){
+    //     let column_name=$(this).attr('id')
+    //     console.log(column_name)
+    //     var order=$(this).data('order')
+    //     if (order==undefined || order=='desc'){
+    //         this.setAttribute('data-order','asc')
+    //     }
+    //     if (order=='asc'){
+    //         this.setAttribute('data-order','desc')
+    //     }
+    //
+    //     var order=$(this).data('order')
+    //     console.log(order)
+    //     var arrow=''
+    //     if (order=='desc'){
+    //         arrow='<span class="fa fa-arrow-down"></span>'
+    //         this.setAttribute('data-order','asc')
+    //     }
+    //     else{
+    //         arrow='<span class="fa fa-arrow-up"></span>'
+    //         this.setAttribute('data-order','desc')
+    //     }
+    //     // console.log(this.getAttribute('data-order'))
+    //     var order=$(this).data('order')
+    //     console.log(order)
+    //     $(this).append(arrow)
+    //
+    // })
+
+</script>
 </body>
 </html>

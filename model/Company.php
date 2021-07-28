@@ -154,8 +154,9 @@ class Company
         header("Access-Control-Allow-Methods: POST");
         header("Access-Control-Allow-Headers: *, Access-Control-Allow-Headers, Authorization, X-Requested-With");
         $this->email = $this->data['email'];
-        $this->sql = "select * from company1 where email='$this->email'";
-        $this->stmt = $this->conn->query($this->sql);
+        $this->sql = "select * from company1 where email=:email";
+        $this->stmt = $this->conn->prepare($this->sql);
+        $this->stmt->bindValue(':email', $this->email);
         $this->stmt->execute();
         $this->company_data = $this->stmt->fetchAll();
         if (count($this->company_data) > 0) {
@@ -175,8 +176,9 @@ class Company
         header("Access-Control-Allow-Credentials: true");
         if (isset($_GET['id'])) {
             $this->cid = $_GET['id'];
-            $this->sql = "select * from company1 where id=$this->cid";
-            $this->stmt = $this->conn->query($this->sql);
+            $this->sql = "select * from company1 where id=:id";
+            $this->stmt = $this->conn->prepare($this->sql);
+            $this->stmt->bindValue(':id', $this->cid);
             $this->stmt->execute();
             $this->data = $this->stmt->fetchAll();
             $this->suser = array();
@@ -196,7 +198,19 @@ class Company
             }
             echo json_encode($this->suser);
         } else {
-            $this->sql = "select * from company1 order by name";
+            if (isset($_GET['sort'])) {
+                $field = $_GET['sort'];
+            }
+            if ($_GET['sort'] == 'undefined') {
+                $field = 'name';
+            }
+            if (isset($_GET['order'])) {
+                $ordertype = ($_GET['order'] == 'desc') ? 'desc' : 'asc';
+            } else {
+                $ordertype = 'asc';
+            }
+
+            $this->sql = "select * from company1 order by" . " $field $ordertype";
             $this->stmt = $this->conn->query($this->sql);
             $this->stmt->execute();
             $this->data = $this->stmt->fetchAll();
