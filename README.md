@@ -1,8 +1,8 @@
-#Invoice-System
+# Invoice-System
 
 This project is a web based implementation of Billing System using core php(with Xampp as the local server) for backend purpose and javascript and jquery for frontend purpose. The communication between php and js takes place with the help of api. Postgresql is used to implement the realtime database. Billing system manage cash flows more efficiently as compared to their non-automated counterparts.
 
-##Getting started with installation
+## Getting started with installation
 - To clone it on your local machine  to htdocs folder present inside the disk where XAMPP is installed.
 >git clone https://github.com/Sushmi-pal/Invoice-.git
 
@@ -10,4 +10,22 @@ This project is a web based implementation of Billing System using core php(with
 
 - Open the web browser and on the url, type localhost/filename
 
-
+## Screenshots
+- Create New Company
+![](screenshots/NewCompany.PNG)
+  
+  
+- Create New Invoice
+![](screenshots/NewInvoice.PNG)
+  
+  
+- View All Companies
+![](screenshots/ViewCompany.PNG)
+  
+  
+- View All Invoices
+![](screenshots/ViewInvoice.PNG)
+  
+  
+- Search invoice based on Company Name
+![](screenshots/SearchInvoice.PNG)
