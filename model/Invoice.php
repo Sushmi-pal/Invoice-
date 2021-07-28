@@ -116,7 +116,7 @@ class Invoice
             }
             echo json_encode($this->suser);
         } else {
-            $this->sql = "Select itemrest.id as item_id, itemrest.name, unit_cost, quantity, company_id, invoice.id, invoice.created_at, company1.name, address, email, contact, city from itemrest inner join invoice on itemrest.invoice_id=invoice.id inner join company1 on company1.id=invoice.company_id";
+            $this->sql = "Select itemrest.id as item_id, itemrest.name, unit_cost, quantity, company_id, invoice.id, invoice.created_at, company1.name, address, email, contact, city from itemrest inner join invoice on itemrest.invoice_id=invoice.id inner join company1 on company1.id=invoice.company_id order by company1.name";
             $this->stmt = $this->conn->query($this->sql);
             $this->stmt->execute();
             $this->data = $this->stmt->fetchAll();

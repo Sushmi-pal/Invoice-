@@ -196,7 +196,7 @@ class Company
             }
             echo json_encode($this->suser);
         } else {
-            $this->sql = "select * from company1";
+            $this->sql = "select * from company1 order by name";
             $this->stmt = $this->conn->query($this->sql);
             $this->stmt->execute();
             $this->data = $this->stmt->fetchAll();

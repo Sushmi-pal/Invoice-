@@ -4,9 +4,6 @@ require_once './model/Company.php';
 require_once './model/Invoice.php';
 require_once './model/db.php';
 
-
-
-
 class CompanyController extends Controller
 {
     /**
@@ -15,10 +12,9 @@ class CompanyController extends Controller
      */
     public static function CompanyList()
     {
-        /* Calling retrieveinvoice() method from Invoice.php */
-        $i = new Invoice();
+        $invoice = new Invoice();
         try {
-            $i->RetrieveInvoice();
+            $invoice->RetrieveInvoice();
         } catch (Exception $e) {
             Controller::ErrorLog($e);
         }
@@ -33,8 +29,8 @@ class CompanyController extends Controller
      */
     public static function CompanyCreate()
     {
-        $c = new Company();
-        $result = $c->PostCompany();
+        $company = new Company();
+        $result = $company->PostCompany();
         try {
             if ($result) {
                 echo json_encode(array("Success" => "Company created"));
@@ -53,9 +49,9 @@ class CompanyController extends Controller
     public static function ValidateEmail()
     {
         /* For backend validation to check whether the email already exists in the database table or not */
-        $c = new Company();
+        $company = new Company();
         try {
-            $c->EmailValidation();
+            $company->EmailValidation();
         } catch (Exception $e) {
             Controller::ErrorLog($e);
         }
@@ -70,48 +66,51 @@ class CompanyController extends Controller
     public static function CompanyUpdate()
     {
         /* For updating the details of company by calling updatecompany() method */
-        $c = new Company();
+        $company = new Company();
         try {
-            $c->UpdateCompany();
+            $company->UpdateCompany();
         } catch (Exception $e) {
             Controller::ErrorLog($e);
         }
     }
 
+    /**
+     * Deletes the details of company by calling deletecompany() method
+     */
     public static function CompanyDelete()
     {
-        /* For deleting the details of company by calling deletecompany() method */
-        $c = new Company();
+        $company = new Company();
         try {
-            $c->DeleteCompany();
+            $company->DeleteCompany();
         } catch (Exception $e) {
             Controller::ErrorLog($e);
         }
     }
 
+    /**
+     * Creates company table
+     */
     public static function CompanyTable()
     {
-        /* Creating company table*/
-        $c = new Company();
+        $company = new Company();
         try {
-            $c->Table();
+            $company->Table();
         } catch (Exception $e) {
             Controller::ErrorLog($e);
         }
-
-
     }
 
+
+    /**
+     * Retrieves company details. It is fetched in dropdown menu in AddCompany.html page
+     */
     public static function GetCompany()
     {
-        //Retrieve company details. It is fetched in dropdown menu in AddCompany.html page
-        $c = new Company();
+        $company = new Company();
         try {
-            $c->GetCompany();
+            $company->GetCompany();
         } catch (Exception $e) {
             Controller::ErrorLog($e);
         }
     }
-
-
 }

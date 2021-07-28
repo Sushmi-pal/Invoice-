@@ -5,63 +5,73 @@ require_once './model/Invoice.php';
 
 /**
  * Class InvoiceController
- * @instance $i
+ * @instance $invoice
  * Catch exception if not executed in try block
  */
 class InvoiceController extends Controller
 {
 
+    /**
+     * Calls the updateinvoice() method
+     */
     public static function InvoiceUpdate()
     {
-        /* Calls the updateinvoice() method of Invoice.php which is in the model directory*/
-        $i = new Invoice();
+        $invoice = new Invoice();
         try {
-            $i->UpdateInvoice();
+            $invoice->UpdateInvoice();
         } catch (Exception $e) {
             Controller::ErrorLog($e);
         }
     }
 
+    /**
+     * Calls createinvoice()
+     */
     public static function CreateInvoice()
     {
-        /* Calls the create() method from model/Invoice.php */
-        $i = new Invoice();
+        $invoice = new Invoice();
         try {
-            $i->CreateInvoice();
+            $invoice->CreateInvoice();
         } catch (Exception $e) {
             Controller::ErrorLog($e);
         }
     }
 
+    /**
+     * Deletes the invoice
+     */
     public static function DeleteInvoice()
     {
-        /* Calls deleteinvoice() which is in model/Invoice.php */
-        $i = new Invoice();
+        $invoice = new Invoice();
         try {
-            $i->DeleteInvoice();
+            $invoice->DeleteInvoice();
         } catch (Exception $e) {
             Controller::ErrorLog($e);
         }
     }
 
+    /**
+     * Pagination
+     */
     public static function InvoicePages()
     {
-        /* For pagination. Calls the invoicepages() method present in model/Invoice.php */
-        $i = new Invoice();
+        $invoice = new Invoice();
         try {
-            $i->InvoicePages();
+            $invoice->InvoicePages();
         } catch (Exception $e) {
             Controller::ErrorLog($e);
         }
 
     }
 
+    /**
+     * Searching
+     */
     public static function SearchInvoice()
     {
-        /* For searching. Calls the searchinvoice() method */
-        $i = new Invoice();
+        $invoice = new Invoice();
         try {
-            $i->SearchInvoice();
+            $invoice->SearchInvoice();
         } catch (Exception $e) {
             Controller::ErrorLog($e);
         }
