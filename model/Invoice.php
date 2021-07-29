@@ -271,9 +271,10 @@ class Invoice
             else{
                 $ordertype='asc';
             }
+
             $uid = $_GET['offset'];
             $limit = $_GET['limit'];
-            $sql = "Select invoice.id,company1.name, company1.id as cid from invoice inner join company1 on invoice.company_id=company1.id where invoice.id>=$uid limit $limit order by $field $ordertype";
+            $sql = "Select invoice.id,company1.name, company1.id as cid from invoice inner join company1 on invoice.company_id=company1.id where invoice.id>=$uid  order by $field $ordertype limit $limit";
             $stmt = $this->conn->query($sql);
             $stmt->execute();
             $data = $stmt->fetchAll();
@@ -292,7 +293,36 @@ class Invoice
             }
             echo json_encode($suser);
         } else {
-            echo json_encode(["Wrong" => "Check the url"]);
+            if (isset($_GET['sort'])){
+                $field=$_GET['sort'];
+            }
+            else{
+                $field = 'company1.name';
+            }
+            if (isset($_GET['order'])){
+                $ordertype = ($_GET['order'] == 'desc')? 'desc' : 'asc';
+            }
+            else{
+                $ordertype='asc';
+            }
+            $sql = "Select invoice.id,company1.name, company1.id as cid from invoice inner join company1 on invoice.company_id=company1.id  order by $field $ordertype";
+            $stmt = $this->conn->query($sql);
+            $stmt->execute();
+            $data = $stmt->fetchAll();
+            $suser = array();
+            $suser['data'] = array();
+
+            foreach ($data as $k => $v) {
+                $user_data = array(
+                    'id' => $v[0],
+                    'cid' => $v['cid'],
+                    'cname' => $v['name']
+
+                );
+//        Push to array
+                array_push($suser['data'], $user_data);
+            }
+            echo json_encode($suser);
         }
     }
 
@@ -306,11 +336,22 @@ class Invoice
         header("Access-Control-Allow-Credentials: true");
         $kname = isset($_GET["cname"]) ? $_GET["cname"] : "";
         if ($kname) {
-
+            if (isset($_GET['sort'])){
+                $field=$_GET['sort'];
+            }
+            else{
+                $field = 'company1.name';
+            }
+            if (isset($_GET['order'])){
+                $ordertype = ($_GET['order'] == 'desc')? 'desc' : 'asc';
+            }
+            else{
+                $ordertype='asc';
+            }
             $name = $_GET["cname"];
             $na = trim($name, ' ""');
             $nam = strtoupper($na);
-            $sql = "Select invoice.id as iid, company1.id as cid, company1.name from invoice inner join company1 on invoice.company_id=company1.id where upper(company1.name) like '%$nam%'";
+            $sql = "Select invoice.id as iid, company1.id as cid, company1.name from invoice inner join company1 on invoice.company_id=company1.id where upper(company1.name) like '%$nam%' order by $field $ordertype";
             $stmt = $this->conn->query($sql);
             $stmt->execute();
             $data = $stmt->fetchAll();

@@ -46,9 +46,9 @@
     <table class="table" id="myTable">
         <thead>
         <tr>
-            <th scope="col">S No.</th>
-            <th scope="col">Invoice</th>
-            <th scope="col">Company</th>
+            <th scope="col" class="column_sort" id="id">S No.</th>
+            <th scope="col" class="column_sort" id="invoice">Invoice</th>
+            <th scope="col" class="column_sort" id="name">Company</th>
             <th scope="col">View</th>
             <th scope="col">Edit</th>
             <th scope="col">Delete</th>
@@ -59,15 +59,40 @@
     </table>
 </div>
 <script>
-    let page = document.getElementById('page')
-    let TotalLength = localStorage.getItem("SearchInvoiceID").split(",").length
-    numofPages = Math.ceil(TotalLength / 5)
-    let op = ''
-    for (let num = 1; num <= numofPages; num++) {
-        op += `<li class="page-item"><a class="page-link" id="${num}" onclick="NewPage(${num})">${num}</a></li>`
-    }
-    page.innerHTML = op
+    // let page = document.getElementById('page')
+    // let TotalLength = localStorage.getItem("SearchInvoiceID").split(",").length
+    // numofPages = Math.ceil(TotalLength / 5)
+    // let op = ''
+    // for (let num = 1; num <= numofPages; num++) {
+    //     op += `<li class="page-item"><a class="page-link" id="${num}" onclick="NewPage(${num})">${num}</a></li>`
+    // }
+    // page.innerHTML = op
 
+    $('.column_sort').on('click', function () {
+        $('.updown').remove()
+        let column_name = $(this).attr('id')
+        console.log(column_name)
+        localStorage.setItem('column_name', column_name)
+        var order = localStorage.getItem('order')
+        var arrow = ''
+        if (order == 'desc' || order == undefined) {
+            arrow = ''
+            arrow = '<span class="updown fa fa-arrow-down"></span>'
+            localStorage.setItem('order', 'asc')
+
+        } else {
+            arrow = ''
+            arrow = '<span class="updown fa fa-arrow-up"></span>'
+            localStorage.setItem('order', 'desc')
+        }
+        console.log(order)
+        var namefield = ''
+        namefield += $(this).html()
+        namefield += arrow
+        $(this).html(namefield)
+        SearchByCname(column_name, order)
+    })
+    SearchByCname(localStorage.getItem('column_name'),localStorage.getItem('order'))
 </script>
 </body>
 </html>
