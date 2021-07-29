@@ -178,7 +178,7 @@
         due.value = document.getElementById('dcost').value - document.getElementById('advance').value
     }
 
-    fetch(CommonName+"getcompany").then(res => res.json()).then(data => {
+    fetch(CommonName+"getcompany?sort=name&order=''").then(res => res.json()).then(data => {
         data.data.forEach(function (data) {
             $('#company').append($('<option>', {
 
