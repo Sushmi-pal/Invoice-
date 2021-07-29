@@ -5,8 +5,6 @@ require_once './model/Invoice.php';
 require_once './model/db.php';
 
 
-
-
 class CompanyController extends Controller
 {
     /**

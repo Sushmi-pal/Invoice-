@@ -87,7 +87,7 @@
     })
     localStorage.setItem("totalamount", totalamount)
     $(document).ready(function () {
-        $.get(CommonName+"getcompany", function (data) {
+        $.get(CommonName + "getcompany", function (data) {
             data.data.forEach(function (data) {
                 $('#company').append($('<option>', {
                     value: data['id'],
@@ -130,7 +130,7 @@
             let discounted_cost = document.getElementById('discounted_cost')
             let due = document.getElementById('due')
             let total_cost = document.getElementById('cost')
-            fetch(CommonName+"invoiceupdate", {
+            fetch(CommonName + "invoiceupdate", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -153,7 +153,7 @@
     }
 
 
-    fetch(window.CommonName+"companylist?id=" + window.location.href.split("#")[1]).then(res => res.json()).then(data => {
+    fetch(window.CommonName + "companylist?id=" + window.location.href.split("#")[1]).then(res => res.json()).then(data => {
 
         let op = ""
         var ItemContainer = document.getElementById('item-container')

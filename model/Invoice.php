@@ -30,6 +30,7 @@ class Invoice
 
     /**
      * Store the invoice information
+     * @return void
      */
     public function CreateInvoice()
     {
@@ -77,6 +78,7 @@ class Invoice
 
     /**
      * Get all the invoices
+     * @return void
      */
     public function RetrieveInvoice()
     {
@@ -147,6 +149,7 @@ class Invoice
 
     /**
      * Delete the invoice and all the columns related to invoice id
+     * @return void
      */
     public function DeleteInvoice()
     {
@@ -170,6 +173,7 @@ class Invoice
 
     /**
      * Update invoice
+     * @return void
      */
     public function UpdateInvoice()
     {
@@ -239,6 +243,7 @@ class Invoice
 
     /**
      * For pagination
+     * @return void
      */
 
     public function InvoicePages()
@@ -273,6 +278,7 @@ class Invoice
 
     /**
      * Search on the basis of company name
+     * @return void
      */
 
     public function SearchInvoice()

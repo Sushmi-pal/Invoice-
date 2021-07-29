@@ -90,7 +90,7 @@
     let tax = document.getElementById('tax')
     let tax_price = document.getElementById('tax_price')
     let grand_total = document.getElementById('grand_total')
-    fetch(CommonName+"companylist?id=" + window.location.href.split("#")[1]).then(
+    fetch(CommonName + "companylist?id=" + window.location.href.split("#")[1]).then(
         res => res.json()).then(data => {
         discount.innerHTML = "DISCOUNT " + 10 + "%"
         tax.innerHTML = "TAX " + 5 + "%"
@@ -103,7 +103,7 @@
 
     let total = document.getElementById('total')
 
-    fetch(CommonName+"companylist?id=" + window.location.href.split("#")[1]).then(res => res.json()).then(
+    fetch(CommonName + "companylist?id=" + window.location.href.split("#")[1]).then(res => res.json()).then(
         data => {
             let preview = document.getElementById('preview');
             let op = '<tr>'

@@ -63,6 +63,7 @@
 <script>
     localStorage.setItem("CommonName", "http://localhost/api/")
     let CommonName = localStorage.getItem("CommonName")
+
     function GeneralJquery(c) {
         let a = document.getElementById(`Span${c}`)
         $(`#${c}`).on("keyup paste", (function () {
@@ -101,7 +102,7 @@
 
     function ValidateEmail() {
         let email = document.getElementById('Email')
-        fetch(CommonName+"emailvalidate", {
+        fetch(CommonName + "emailvalidate", {
             method: 'POST',
             headers: {
                 'Content-Type': 'text/plain'
@@ -155,7 +156,7 @@
 
 
         if (ValidateAddress && ValidateCname && EmailValidation && ValidateCity && vEmail && ValidateContact && address.value.length > 2) {
-            fetch(CommonName+"companycreate", {
+            fetch(CommonName + "companycreate", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

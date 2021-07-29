@@ -7,46 +7,60 @@ require_once './model/Invoice.php';
  * Class InvoiceController
  * @instance $i
  * Catch exception if not executed in try block
+ * @return Exception[]|string[]
  */
 class InvoiceController extends Controller
 {
-
     public static function InvoiceUpdate()
     {
-        /* Calls the updateinvoice() method of Invoice.php which is in the model directory*/
         $i = new Invoice();
         try {
             $i->UpdateInvoice();
+            return (array("Success" => "Invoice Updated"));
         } catch (Exception $e) {
             Controller::ErrorLog($e);
+            return (array("Exception" => $e));
         }
     }
 
+    /**
+     * Creates an invoice
+     * @return Exception[]|string[]
+     */
     public static function CreateInvoice()
     {
-        /* Calls the create() method from model/Invoice.php */
         $i = new Invoice();
         try {
             $i->CreateInvoice();
+            return (array("Success" => "Invoice Created Successfully"));
         } catch (Exception $e) {
             Controller::ErrorLog($e);
+            return (array("Exception" => $e));
         }
     }
 
+    /**
+     * Deletes an invoice
+     * @return Exception[]|string[]
+     */
     public static function DeleteInvoice()
     {
-        /* Calls deleteinvoice() which is in model/Invoice.php */
         $i = new Invoice();
         try {
             $i->DeleteInvoice();
+            return (array("Success" => "Invoice Deleted Successfully"));
         } catch (Exception $e) {
             Controller::ErrorLog($e);
+            return (array("Exception" => $e));
         }
     }
 
+    /**
+     * Pagination
+     * @return void
+     */
     public static function InvoicePages()
     {
-        /* For pagination. Calls the invoicepages() method present in model/Invoice.php */
         $i = new Invoice();
         try {
             $i->InvoicePages();
@@ -56,9 +70,12 @@ class InvoiceController extends Controller
 
     }
 
+    /**
+     * Search invoice based on company name
+     * @return void
+     */
     public static function SearchInvoice()
     {
-        /* For searching. Calls the searchinvoice() method */
         $i = new Invoice();
         try {
             $i->SearchInvoice();

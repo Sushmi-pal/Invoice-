@@ -35,11 +35,10 @@ class Company
     /**
      *
      * Create company table
-     *
+     * @return void
      */
     public function Table()
     {
-        //Creating company table
         try {
             $sql = "drop table if exists Company1 cascade";
             $this->conn->exec($sql);
@@ -90,6 +89,7 @@ class Company
 
     /**
      * Delete company detail
+     * @return false|string
      */
     public function DeleteCompany()
     {
@@ -113,14 +113,15 @@ class Company
         $sql = "delete from company1 where id=$id";
         $this->result_company = $this->conn->exec($sql);
         if ($this->result_company) {
-            echo json_encode(array("Success" => "Deleted successfully"));
+            return json_encode(array("Success" => "Deleted successfully"));
         } else {
-            echo json_encode(array("Fail" => "fail"));
+            return json_encode(array("Fail" => "fail"));
         }
     }
 
     /**
      * Update the company table
+     * @return void
      */
 
     public function UpdateCompany()
@@ -145,6 +146,7 @@ class Company
     /**
      *
      * Validates whether the email address already exists in database
+     * @return void
      *
      */
 
@@ -168,6 +170,7 @@ class Company
 
     /**
      * Get the details of company
+     * @return void
      */
     public function GetCompany()
     {
