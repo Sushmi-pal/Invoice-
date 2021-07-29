@@ -53,7 +53,7 @@
         <input type="text" id="due" name="due" class="due"><br>
 
         <label for="company">Your company:</label>
-        <select id="company"></select>
+        <input type="text" id="company" name="company" class="company" readonly="true"><br>
         <a class="new" href="addcompany.html">Add new</a><br>
         <a class="new" href="preview.html">Preview</a>
 
@@ -153,7 +153,7 @@
     }
 
 
-    fetch(window.CommonName+"companylist?id=" + window.location.href.split("#")[1]).then(res => res.json()).then(data => {
+    fetch(CommonName+"companylist?id=" + window.location.href.split("#")[1]).then(res => res.json()).then(data => {
 
         let op = ""
         var ItemContainer = document.getElementById('item-container')
@@ -170,11 +170,9 @@
         document.getElementById('due').value = data.data[0]['due']
         document.getElementById('discounted_cost').value = data.data[0]['wdiscount']
         document.getElementById('cost').value = data.data[0]['total_cost']
-        localStorage.setItem("cm", data.data[0]['company_name'])
+        document.getElementById('company').value=data.data[0]['company_name']
         let advance = document.getElementById('advance')
         advance.value = data.data[0]['advance_payment']
-        let company = document.getElementById('company')
-        company.options[company.selectedIndex].text = localStorage.getItem("cm")
     })
 
     function ItemValue() {

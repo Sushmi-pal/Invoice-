@@ -1,7 +1,5 @@
 let CommonName = localStorage.getItem("CommonName")
-function EditInvoice(id) {
-    localStorage.setItem("invoice_id", id)
-}
+
 
 function DeleteInvoice(id) {
     let DeleteInfo = `Your information will be removed from database.`;
