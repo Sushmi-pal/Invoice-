@@ -6,7 +6,7 @@ function DeleteInvoice(id) {
     let confirmation = confirm(DeleteInfo)
     let body = {"id": id}
     if (confirmation) {
-        fetch(CommonName+'deleteinvoice', {
+        fetch(CommonName + 'deleteinvoice', {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
@@ -20,7 +20,7 @@ function DeleteInvoice(id) {
 }
 
 function SearchByCname() {
-    fetch(CommonName+"companylist").then(res => res.json()).then(data => {
+    fetch(CommonName + "companylist").then(res => res.json()).then(data => {
             let tbody = document.getElementById('invoice_details_table')
             localStorage.setItem("total length1", data.data.length)
             let MinArr1 = []

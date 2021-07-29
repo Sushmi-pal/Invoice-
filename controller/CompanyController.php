@@ -17,10 +17,10 @@ class CompanyController extends Controller
         $invoice = new Invoice();
         try {
             $invoice->RetrieveInvoice();
-            return (array("Success"=>"Invoice data retrieved"));
+            return (array("Success" => "Invoice data retrieved"));
         } catch (Exception $e) {
             Controller::ErrorLog($e);
-            return (array("Fail"=>$e));
+            return (array("Fail" => $e));
         }
 
     }
@@ -41,7 +41,7 @@ class CompanyController extends Controller
             }
         } catch (Exception $e) {
             Controller::ErrorLog($e);
-            return (array("Exception occured"=>$e));
+            return (array("Exception occured" => $e));
         }
 
     }
@@ -57,10 +57,10 @@ class CompanyController extends Controller
         $company = new Company();
         try {
             $company->EmailValidation();
-            return (array("Success"=>"Email Validated Successfully"));
+            return (array("Success" => "Email Validated Successfully"));
         } catch (Exception $e) {
             Controller::ErrorLog($e);
-            return (array("Failed"=>$e));
+            return (array("Failed" => $e));
         }
     }
 
@@ -74,10 +74,10 @@ class CompanyController extends Controller
         $company = new Company();
         try {
             $company->UpdateCompany();
-            return (array("Success"=>"Company Details Updated Successfully"));
+            return (array("Success" => "Company Details Updated Successfully"));
         } catch (Exception $e) {
             Controller::ErrorLog($e);
-            return (array("Failed"=>$e));
+            return (array("Failed" => $e));
         }
     }
 
@@ -90,10 +90,10 @@ class CompanyController extends Controller
         $company = new Company();
         try {
             $company->DeleteCompany();
-            return (array("Success"=>"Company Details Deleted Successfully"));
+            return (array("Success" => "Company Details Deleted Successfully"));
         } catch (Exception $e) {
             Controller::ErrorLog($e);
-            return array("Failed"=>$e);
+            return array("Failed" => $e);
         }
     }
 

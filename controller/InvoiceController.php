@@ -13,6 +13,7 @@ class InvoiceController extends Controller
 
     /**
      * Calls the updateinvoice() method
+     * @return void
      */
     public static function InvoiceUpdate()
     {
@@ -25,7 +26,8 @@ class InvoiceController extends Controller
     }
 
     /**
-     * Calls createinvoice()
+     * Calls createinvoice
+     * @return void
      */
     public static function CreateInvoice()
     {
@@ -39,6 +41,7 @@ class InvoiceController extends Controller
 
     /**
      * Deletes the invoice
+     * @return void
      */
     public static function DeleteInvoice()
     {
@@ -52,6 +55,7 @@ class InvoiceController extends Controller
 
     /**
      * Pagination
+     * @return void
      */
     public static function InvoicePages()
     {
@@ -66,6 +70,7 @@ class InvoiceController extends Controller
 
     /**
      * Searching
+     * @return void
      */
     public static function SearchInvoice()
     {

@@ -65,13 +65,13 @@
     let InvoiceNum = localStorage.getItem("allIDs1")
     let SplitByComma = InvoiceNum.split(',')
 
-    function NewPage(id,column_name, order) {
-        localStorage.setItem("number",id)
+    function NewPage(id, column_name, order) {
+        localStorage.setItem("number", id)
         let Starting_Inv_ID = (id - 1) * 5
         let storedId = SplitByComma.sort((a, b) => a - b);
         // console.log(CommonName+"invoicepages?offset=" + storedId[Starting_Inv_ID] + "&sort="+localStorage.getItem('column_name')+"&order="+localStorage.getItem('order')+"&limit=5")
-        fetch(CommonName+"invoicepages?offset=" + storedId[Starting_Inv_ID] + "&sort="+column_name+"&order="+order+"&limit=5").then(res => res.json()).then(data => {
-            console.log('data',data)
+        fetch(CommonName + "invoicepages?offset=" + storedId[Starting_Inv_ID] + "&sort=" + column_name + "&order=" + order + "&limit=5").then(res => res.json()).then(data => {
+            console.log('data', data)
             let tbody = document.getElementById("invoice_details_table")
             localStorage.setItem("total length1", data.data.length)
             let op = "<tr>"
@@ -107,33 +107,31 @@
     // }
 
 
-
-
     $('.page_sort').on('click', function () {
-            $('.updown').remove()
-            let column_name = $(this).attr('id')
-            console.log(column_name)
-            localStorage.setItem('column_name', column_name)
-            var order = localStorage.getItem('order')
-            var arrow = ''
-            if (order == 'desc' || order == undefined) {
-                arrow = ''
-                arrow = '<span class="updown fa fa-arrow-down"></span>'
-                localStorage.setItem('order', 'asc')
+        $('.updown').remove()
+        let column_name = $(this).attr('id')
+        console.log(column_name)
+        localStorage.setItem('column_name', column_name)
+        var order = localStorage.getItem('order')
+        var arrow = ''
+        if (order == 'desc' || order == undefined) {
+            arrow = ''
+            arrow = '<span class="updown fa fa-arrow-down"></span>'
+            localStorage.setItem('order', 'asc')
 
-            } else {
-                arrow = ''
-                arrow = '<span class="updown fa fa-arrow-up"></span>'
-                localStorage.setItem('order', 'desc')
-            }
-            console.log(order)
-            var namefield = ''
-            namefield += $(this).html()
-            namefield += arrow
-            $(this).html(namefield)
-        NewPage(localStorage.getItem("number"),column_name, order)
-        })
-    NewPage(localStorage.getItem("number"),localStorage.getItem('column_name'), localStorage.getItem('order'))
+        } else {
+            arrow = ''
+            arrow = '<span class="updown fa fa-arrow-up"></span>'
+            localStorage.setItem('order', 'desc')
+        }
+        console.log(order)
+        var namefield = ''
+        namefield += $(this).html()
+        namefield += arrow
+        $(this).html(namefield)
+        NewPage(localStorage.getItem("number"), column_name, order)
+    })
+    NewPage(localStorage.getItem("number"), localStorage.getItem('column_name'), localStorage.getItem('order'))
 
 </script>
 </body>
