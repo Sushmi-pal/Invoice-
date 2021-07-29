@@ -73,8 +73,15 @@ class Company
         $this->city = $this->data['city'];
         try {
             if ($this->name && $this->address && $this->email && $this->contact && $this->city) {
-                $sql = "insert into company1(name, address, email, contact, city) values('$this->name', '$this->address','$this->email','$this->contact','$this->city')";
-                $result = $this->conn->exec($sql);
+//                $sql = "insert into company1(name, address, email, contact, city) values('$this->name', '$this->address','$this->email','$this->contact','$this->city')";
+                $sql = "insert into company1(name, address, email, contact, city) values(:name,:address,:email,:contact,:city)";
+                $query=$this->conn->prepare($sql);
+                $query->bindValue(':name',$this->name);
+                $query->bindValue(':address',$this->address);
+                $query->bindValue(':email',$this->email);
+                $query->bindValue(':contact',$this->contact);
+                $query->bindValue(':city',$this->city);
+                $result = $query->execute();
                 return (array)$result;
 
 
