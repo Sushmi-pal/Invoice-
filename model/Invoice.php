@@ -41,8 +41,10 @@ class Invoice
         $this->total_cost = $this->data['total'];
         $this->wdiscount = $this->data['wdiscount'];
         $this->due = $this->data['due'];
-        $this->sql = "insert into invoice(company_id) values ($this->company_id)";
-        $result = $this->conn->exec($this->sql);
+        $this->sql = "insert into invoice(company_id) values (:company_id)";
+        $this->stmt = $this->conn->prepare($this->sql);
+        $this->stmt->bindValue(':company_id', $this->company_id);
+        $this->stmt->execute();
         $this->sql = "select id from invoice";
         $this->stmt = $this->conn->query($this->sql);
         $this->stmt->execute();
@@ -193,8 +195,9 @@ class Invoice
         $this->wdiscount = $this->data['wdiscount'];
         $this->due = $this->data['due'];
 //        delete item
-        $this->sql = "select itemrest.id from itemrest inner join invoice on itemrest.invoice_id=invoice.id where invoice.id=$this->invoice_id";
-        $this->stmt = $this->conn->query($this->sql);
+        $this->sql = "select itemrest.id from itemrest inner join invoice on itemrest.invoice_id=invoice.id where invoice.id=:invoice_id";
+        $query=$this->conn->prepare($this->sql);
+        $query->bindValue(':invoice_id',$this->invoice_id);
         $this->stmt->execute();
         $this->data = $this->stmt->fetchAll();
         $a1 = array_values($this->data);
