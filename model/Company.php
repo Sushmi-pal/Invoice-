@@ -73,7 +73,6 @@ class Company
         $this->city = $this->data['city'];
         try {
             if ($this->name && $this->address && $this->email && $this->contact && $this->city) {
-//                $sql = "insert into company1(name, address, email, contact, city) values('$this->name', '$this->address','$this->email','$this->contact','$this->city')";
                 $sql = "insert into company1(name, address, email, contact, city) values(:name,:address,:email,:contact,:city)";
                 $query=$this->conn->prepare($sql);
                 $query->bindValue(':name',$this->name);

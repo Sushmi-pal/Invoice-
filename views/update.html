@@ -142,10 +142,10 @@
                     wdiscount: discounted_cost.value,
                     due: due.value
                 })
-            }).then(res => res.json()).then(data => {
+            }).then(res => res.json()).then(() => {
                 alert("Invoice updated")
                 window.location.href = "index.html"
-            })
+            }).catch(err=>console.log(err))
         } else {
             alert("Check itemlist")
         }
@@ -172,10 +172,9 @@
         document.getElementById('company').value = data.data[0]['company_name']
         let advance = document.getElementById('advance')
         advance.value = data.data[0]['advance_payment']
-    })
+    }).catch(err=>console.log(err))
 
     function ItemValue() {
-
         var value = $('form').serialize()
         var SplitResult = value.split("&")
         var ItemArray = []

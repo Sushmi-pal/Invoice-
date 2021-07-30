@@ -99,7 +99,7 @@
         let tax_cost = (1 + 5 / 100) * discount_cost
         tax_price.innerText = tax_cost.toString()
         grand_total.innerText = tax_cost.toString()
-    })
+    }).catch(err=>console.log(err))
 
     let total = document.getElementById('total')
 
@@ -121,7 +121,7 @@
                     total.innerText = total_cost
                 }
             )
-        })
+        }).catch(err=>console.log(err))
 </script>
 </body>
 </html>

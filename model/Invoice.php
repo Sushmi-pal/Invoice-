@@ -44,7 +44,7 @@ class Invoice
         $this->sql = "insert into invoice(company_id) values (:company_id)";
         $this->stmt = $this->conn->prepare($this->sql);
         $this->stmt->bindValue(':company_id', $this->company_id);
-        $this->stmt->execute();
+        $result = $this->stmt->execute();
         $this->sql = "select id from invoice";
         $this->stmt = $this->conn->query($this->sql);
         $this->stmt->execute();
@@ -57,6 +57,7 @@ class Invoice
                 $quantity = $a['quantity'];
                 try {
                     if ($name != " " || cost != " " || $quantity != " ") {
+
                         $this->sql = "insert into itemrest(invoice_id, name, unit_cost, quantity) values ($invoiceid, '$name',$cost, $quantity)";
                         $result_itemrest = $this->conn->exec($this->sql);
                     }
@@ -195,26 +196,25 @@ class Invoice
         $this->wdiscount = $this->data['wdiscount'];
         $this->due = $this->data['due'];
 //        delete item
-        $this->sql = "select itemrest.id from itemrest inner join invoice on itemrest.invoice_id=invoice.id where invoice.id=:invoice_id";
-        $query=$this->conn->prepare($this->sql);
-        $query->bindValue(':invoice_id',$this->invoice_id);
+        $this->sql="select itemrest.id from itemrest inner join invoice on itemrest.invoice_id=invoice.id where invoice.id=$this->invoice_id";
+        $this->stmt = $this->conn->query($this->sql);
         $this->stmt->execute();
         $this->data = $this->stmt->fetchAll();
-        $a1 = array_values($this->data);
-        $a3 = [];
-        foreach ($a1 as $a4) {
-            array_push($a3, (int)$a4['id']);
+        $data_array = array_values($this->data);
+        $array_value = [];
+        foreach ($data_array as $each_data) {
+            array_push($array_value, (int)$each_data['id']);
         }
 
-        $a2 = array();
+        $define_array = array();
 
         foreach ($this->itemarray as $v) {
             foreach ($v as $a) {
-                array_push($a2, (int)$a['id']);
+                array_push($define_array, (int)$a['id']);
             }
         }
-//        echo json_encode($a2); #febata pathako itemid
-        $diff = array_diff($a3, $a2);
+//        echo json_encode($define_array); #febata pathako itemid
+        $diff = array_diff($array_value, $define_array);
         $final = [];
         foreach ($diff as $a => $b) {
             array_push($final, $b);

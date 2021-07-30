@@ -14,7 +14,7 @@ function CompanyList(column_name, order) {
             op += "<tr>";
             CompanyTable.innerHTML = op;
         })
-    })
+    }).catch(err=>console.log(err))
 
 }
 
@@ -34,16 +34,17 @@ function EditCompany(id) {
         email.value = data.data[0]['email']
         city.value = data.data[0]['city']
         phone.value = data.data[0]['contact']
-    })
+    }).catch(err=>console.log(err))
 }
 
 function UpdateCompany() {
     let name = document.getElementById('cname')
     let address = document.getElementById('company_address')
-    let email = document.getElementById('email')
-    let city = document.getElementById('city')
+    let email = document.getElementById('company_email')
+    let city = document.getElementById('company_city')
     let phone = document.getElementById('phone')
     let id = localStorage.getItem("CompanyId")
+
     let body = {
         id: id,
         name: name.value,
@@ -54,7 +55,8 @@ function UpdateCompany() {
 
     }
 
-    fetch(window.CommonName + "companyupdate", {
+
+    fetch(CommonName + "companyupdate", {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json'
@@ -63,7 +65,7 @@ function UpdateCompany() {
 
     }).then(res => res.json()).then(() => {
         CompanyList()
-    })
+    }).catch(err=>console.log(err))
 }
 
 function DeleteCompany(id) {
