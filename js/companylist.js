@@ -14,11 +14,11 @@ function CompanyList(column_name, order) {
             op += "<tr>";
             CompanyTable.innerHTML = op;
         })
-    }).catch(error => console.log(error))
+    })
 
 }
 
-CompanyList()
+CompanyList('name','desc')
 
 function EditCompany(id) {
     let cname = document.getElementById('cname')
