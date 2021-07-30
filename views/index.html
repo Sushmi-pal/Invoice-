@@ -66,6 +66,10 @@
     let SplitByComma = InvoiceNum.split(',')
 
     function NewPage(id, column_name, order) {
+        var previous_active=document.getElementById(localStorage.getItem("prev_page"))
+        previous_active.classList.remove(`active`)
+        var active=document.getElementById(id)
+        active.classList.add(`active`)
         localStorage.setItem("number", id)
         let Starting_Inv_ID = (id - 1) * 5
         let storedId = SplitByComma.sort((a, b) => a - b);
@@ -83,8 +87,11 @@
                 op += "<tr>";
                 tbody.innerHTML = op;
             })
+            localStorage.setItem("prev_page", id)
         }).catch(err=>console.log(err))
+
     }
+
 
 
 
