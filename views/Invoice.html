@@ -106,9 +106,12 @@
         let opt = company.options[company.selectedIndex];
         let cid = opt.value
         let CheckEmptyField;
-        CheckEmptyField = false ? AllItems.includes("") : true
-
-
+        if (AllItems.includes("")){
+            CheckEmptyField = false
+        }
+        else{
+            CheckEmptyField = true
+        }
         if ($('#item-container').children().length !== 0 && CheckEmptyField === true) {
             fetch(CommonName + "invoicecreate", {
                 method: 'POST',
@@ -130,7 +133,7 @@
                 localStorage.setItem("invoice_id", data['invoice_id'])
                 alert("New invoice created")
                 window.location.href = "preview.html#" + data['invoice_id']
-            })
+            }).catch(err=>console.log(err))
 
 
         } else {
@@ -186,7 +189,7 @@
                 text: data['name']
             }));
         });
-    });
+    }).catch(err=>console.log(err));
 
 
     var ItemsJson = JSON.parse(localStorage.getItem("em"))

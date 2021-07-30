@@ -51,8 +51,11 @@ function SearchByCname() {
                 }
             )
         }
-    )
+    ).catch(err=>console.log(err))
 }
 
+function EditInvoice(id){
+    localStorage.setItem("invoice_id",id)
+}
 SearchByCname()
 

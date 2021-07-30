@@ -69,9 +69,7 @@
         localStorage.setItem("number", id)
         let Starting_Inv_ID = (id - 1) * 5
         let storedId = SplitByComma.sort((a, b) => a - b);
-        // console.log(CommonName+"invoicepages?offset=" + storedId[Starting_Inv_ID] + "&sort="+localStorage.getItem('column_name')+"&order="+localStorage.getItem('order')+"&limit=5")
         fetch(CommonName + "invoicepages?offset=" + storedId[Starting_Inv_ID] + "&sort=" + column_name + "&order=" + order + "&limit=5").then(res => res.json()).then(data => {
-            console.log('data', data)
             let tbody = document.getElementById("invoice_details_table")
             localStorage.setItem("total length1", data.data.length)
             let op = "<tr>"
@@ -85,26 +83,9 @@
                 op += "<tr>";
                 tbody.innerHTML = op;
             })
-        })
+        }).catch(err=>console.log(err))
     }
 
-    // function InvoiceTable(column_name, order) {
-    //     fetch(CommonName + "invoicepages?sort=" +column_name + "&order=" + order).then(res => res.json()).then(data => {
-    //         let tbody = document.getElementById("invoice_details_table")
-    //         localStorage.setItem("total length1", data.data.length)
-    //         let op = "<tr>"
-    //         data.data.forEach(function (data, index) {
-    //             op += `<th scope="row">${index + 1}</th>`
-    //             op += `<td>InvoiceItem${data['id']}</td>`
-    //             op += `<td>${data['cname']}</td>`
-    //             op += `<td><a class="fa fa-eye" href="preview.html#${data['id']}" ></a> </td>`
-    //             op += `<td><a class="fa fa-edit" href="update.html#${data['id']}" onclick="EditInvoice(${data['id']})" ></a> </td>`
-    //             op += `<td><a class="fa fa-trash" onclick="DeleteInvoice(${data['id']})" ></a> </td>`
-    //             op += "<tr>";
-    //             tbody.innerHTML = op;
-    //         })
-    //     })
-    // }
 
 
     $('.page_sort').on('click', function () {

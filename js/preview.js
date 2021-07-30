@@ -30,7 +30,7 @@ fetch(CommonName + "companylist?id=" + invoice_id).then(res => res.json()).then(
     }
     $("#date").append(date);
     $("#duedate").append(duedate);
-})
+}).catch(err=>console.log(err))
 
 
 

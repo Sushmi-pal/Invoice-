@@ -23,7 +23,7 @@ function SearchByCname(column_name, order) {
             window.search_iid = SearchIid
             localStorage.setItem("SearchInvoiceID", SearchIid.toString())
         })
-    })
+    }).catch(err => console.log(err))
 }
 
 
@@ -33,7 +33,6 @@ function NewPage(id) {
     console.log(storedId)
     let column_name = localStorage.getItem('column_name')
     let order = localStorage.getItem('order')
-    console.log(CommonName + "invoicepages?offset=" + storedId[Starting_Inv_ID] + "&limit=5&sort=" + column_name + "&order=" + order)
     fetch(CommonName + "invoicepages?offset=" + storedId[Starting_Inv_ID] + "&limit=5&sort=" + column_name + "&order=" + order).then(res => res.json()).then(data => {
         let tbody = document.getElementById("invoice_details_table")
         localStorage.setItem("total length1", data.data.length)
@@ -48,7 +47,7 @@ function NewPage(id) {
             op += "<tr>";
             tbody.innerHTML = op;
         })
-    })
+    }).catch(err => console.log(err))
 }
 
 

@@ -29,7 +29,7 @@ class CompanyController extends Controller
      * @instance of Company $c
      * Executes if $result
      * Catch Exception if not executed in try block
-     * @return Exception[]|string[]
+     * @return Exception[]
      */
     public static function CompanyCreate()
     {
@@ -37,7 +37,7 @@ class CompanyController extends Controller
         $result = $company->PostCompany();
         try {
             if ($result) {
-                return (array("Success" => "New Company created"));
+                echo json_encode(array("Success" => "New Company created"));
             }
         } catch (Exception $e) {
             Controller::ErrorLog($e);
