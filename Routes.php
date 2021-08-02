@@ -3,7 +3,15 @@
 require_once './classes/Route.php';
 require_once './controller/CompanyController.php';
 require_once './controller/InvoiceController.php';
+require_once './controller/UserController.php';
 
+Route::set('usercreate', function () {
+    UserController::UserTable();
+});
+
+Route::set('userpost', function () {
+    echo UserController::PostUser();
+});
 
 Route::set('companycreate', function () {
     CompanyController::CompanyCreate();
