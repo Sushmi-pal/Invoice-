@@ -98,7 +98,6 @@
     $('.page_sort').on('click', function () {
         $('.updown').remove()
         let column_name = $(this).attr('id')
-        console.log(column_name)
         localStorage.setItem('column_name', column_name)
         var order = localStorage.getItem('order')
         var arrow = ''
@@ -112,7 +111,6 @@
             arrow = '<span class="updown fa fa-arrow-up"></span>'
             localStorage.setItem('order', 'desc')
         }
-        console.log(order)
         var namefield = ''
         namefield += $(this).html()
         namefield += arrow
