@@ -1,5 +1,6 @@
 let invoice_id = window.location.href.split('#')[1]
 let CommonName = localStorage.getItem("CommonName")
+let col = document.getElementById('company_logo')
 fetch(CommonName + "companylist?id=" + invoice_id).then(res => res.json()).then(data => {
     $("#name").append(`${data.data[0]['company_name']}`);
     $("#address").append(`${data.data[0]['address']}, `);
@@ -30,7 +31,11 @@ fetch(CommonName + "companylist?id=" + invoice_id).then(res => res.json()).then(
     }
     $("#date").append(date);
     $("#duedate").append(duedate);
-}).catch(err=>console.log(err))
+
+    const img = document.createElement("img");
+    img.src = "/uploads/" + data.data[0]['file_name'];
+    col.innerHTML = img
+}).catch(err => console.log(err))
 
 
 

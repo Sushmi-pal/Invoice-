@@ -14,11 +14,11 @@ function CompanyList(column_name, order) {
             op += "<tr>";
             CompanyTable.innerHTML = op;
         })
-    }).catch(err=>console.log(err))
+    }).catch(err => console.log(err));
 
 }
 
-CompanyList('name','desc')
+CompanyList('name', 'desc')
 
 function EditCompany(id) {
     let cname = document.getElementById('cname')
@@ -26,15 +26,19 @@ function EditCompany(id) {
     let email = document.getElementById('company_email')
     let city = document.getElementById('company_city')
     let phone = document.getElementById('phone')
+    let image_id = document.getElementById('image_id')
     localStorage.setItem("CompanyId", id)
 
     fetch(CommonName + "getcompany?id=" + id).then(res => res.json()).then(data => {
+        console.log(data)
         cname.value = data.data[0]['name']
         address.value = data.data[0]['address']
         email.value = data.data[0]['email']
         city.value = data.data[0]['city']
         phone.value = data.data[0]['contact']
-    }).catch(err=>console.log(err))
+        image_id.src = "../uploads/" + data.data[0]['file_name']
+        console.log(image_id.src)
+    }).catch(err => console.log(err))
 }
 
 function UpdateCompany() {
@@ -44,6 +48,7 @@ function UpdateCompany() {
     let city = document.getElementById('company_city')
     let phone = document.getElementById('phone')
     let id = localStorage.getItem("CompanyId")
+    let file = document.querySelector('[type=file]').files[0]['name']
 
     let body = {
         id: id,
@@ -51,7 +56,9 @@ function UpdateCompany() {
         address: address.value,
         email: email.value,
         contact: phone.value,
-        city: city.value
+        city: city.value,
+        file_name: file,
+        file_image: localStorage.getItem("UpdateImage")
 
     }
 
@@ -65,7 +72,7 @@ function UpdateCompany() {
 
     }).then(res => res.json()).then(() => {
         CompanyList()
-    }).catch(err=>console.log(err))
+    }).catch(err => console.log(err));
 }
 
 function DeleteCompany(id) {
@@ -84,7 +91,7 @@ function DeleteCompany(id) {
 
         }).then(res => res.json()).then(() => {
             CompanyList()
-        }).catch(error => console.log(error))
+        })
     } else {
         alert("Company details not deleted")
     }

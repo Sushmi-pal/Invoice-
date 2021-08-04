@@ -38,6 +38,10 @@
                                           placeholder="Email"><br><br>
                         Contact number: <br><input type="text" id="phone" name="phone" class="phone" size="50"
                                                    placeholder="Phone"><br><br>
+                        Company Logo: <br> <img id="image_id" style="height:40px; width: 40px;">
+                        <input type="file" name="logo" id="logo" onchange="ChangeImage()">
+                        <div id="msg" role="alert">
+                        </div>
                     </div>
                     <button type="button" id="submit" name="update" class="btn btn-primary submit"
                             onclick="UpdateCompany()">Update
@@ -103,6 +107,33 @@
 
 
     })
+
+    function ChangeImage() {
+        const file = document.querySelector('[type=file]').files[0]
+        const reader = new FileReader();
+        const preview = document.querySelector('img');
+        let file_ext = file['name'].split('.')[1].toLowerCase()
+        let accepted_extension = ['jpg', 'jpeg', 'png']
+        reader.addEventListener("load", function () {
+            // convert image file to base64 string
+            preview.style.width = "100%";
+            preview.src = reader.result;
+            localStorage.setItem("UpdateImage", preview.src)
+        }, false);
+
+        if (file) {
+            reader.readAsDataURL(file);
+        }
+        if (!accepted_extension.includes(file_ext)) {
+            let msg = document.getElementById('msg')
+            msg.innerHTML = `.${file_ext} file is not accepted`
+        }
+        else{
+            let msg = document.getElementById('msg')
+            msg.innerHTML=''
+        }
+
+    }
 
 </script>
 </body>

@@ -25,6 +25,36 @@ class InvoiceController extends Controller
         }
     }
 
+    public static function InvoiceTable()
+    {
+        $invoice = new Invoice();
+        try {
+            $invoice->InvoiceTable() ;
+        } catch (Exception $e) {
+            Controller::ErrorLog($e);
+        }
+    }
+
+    public static function ItemTable(){
+        $invoice = new Invoice();
+        try {
+            $invoice->ItemTable();
+            return json_encode(array("Success"=>"Table 'item' created"));
+        } catch (Exception $e) {
+            Controller::ErrorLog($e);
+        }
+    }
+
+    public static function TotalTable(){
+        $invoice = new Invoice();
+        try {
+            $invoice->TotalTable();
+            return json_encode(array("Success"=>"Table 'total' created"));
+        } catch (Exception $e) {
+            Controller::ErrorLog($e);
+        }
+    }
+
     /**
      * Calls createinvoice
      * @return void
