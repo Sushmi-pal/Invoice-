@@ -1,6 +1,7 @@
 <?php
 require_once 'db.php';
 require_once './controller/Controller.php';
+require_once './FileService/FileService.php';
 
 /**
  * Class Company
@@ -14,6 +15,7 @@ class Company
     private $email;
     private $contact;
     private $city;
+    private $up;
 
     /**
      *
@@ -22,6 +24,8 @@ class Company
      */
     public function __construct()
     {
+        $file = new FileService();
+        $this->up=$file;
         $database = new Database();
         $this->conn = $database->ConnectMe();
         $this->data = $database->Datas();
@@ -39,16 +43,16 @@ class Company
      */
     public function Table()
     {
-        //Creating company table
         try {
-            $sql = "drop table if exists Company1 cascade";
+            $sql = "drop table if exists company cascade";
             $this->conn->exec($sql);
-            $sql = "CREATE TABLE Company1(
+            $sql = "CREATE TABLE company(
             id serial unique,
             name varchar(255),
             address varchar(255),
             email varchar(50),
             contact varchar(20),
+            file_name varchar(255),
             city varchar(255));";
             $this->conn->exec($sql);
         } catch (Exception $e) {
@@ -65,25 +69,34 @@ class Company
     {
         header("Access-Control-Allow-Methods: POST");
         header("Access-Control-Allow-Headers: *, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+//        header("Content-Type: multipart/form-data; charset=UTF-8");
 
         $this->name = $this->data['name'];
         $this->address = $this->data['address'];
         $this->email = $this->data['email'];
         $this->contact = $this->data['contact'];
         $this->city = $this->data['city'];
+
+//        $this->sql = "select * from company where name=:name";
+//        $this->stmt = $this->conn->prepare($this->sql);
+//        $this->stmt->bindValue(':name', $this->name);
+//        $this->stmt->execute();
+//        $this->company_data = $this->stmt->fetchAll();
+
         try {
             if ($this->name && $this->address && $this->email && $this->contact && $this->city) {
-                $sql = "insert into company1(name, address, email, contact, city) values(:name,:address,:email,:contact,:city)";
-                $query=$this->conn->prepare($sql);
-                $query->bindValue(':name',$this->name);
-                $query->bindValue(':address',$this->address);
-                $query->bindValue(':email',$this->email);
-                $query->bindValue(':contact',$this->contact);
-                $query->bindValue(':city',$this->city);
+
+                $file_name_new = $this->up->upload($this->data['name'], $this->data['file_name'], $this->data['file_image']);
+                $sql = "insert into company(name, address, email, contact, city, file_name) values(:name,:address,:email,:contact,:city, :file)";
+                $query = $this->conn->prepare($sql);
+                $query->bindValue(':name', $this->name);
+                $query->bindValue(':address', $this->address);
+                $query->bindValue(':email', $this->email);
+                $query->bindValue(':contact', $this->contact);
+                $query->bindValue(':city', $this->city);
+                $query->bindValue(':file', $file_name_new);
                 $result = $query->execute();
                 return (array)$result;
-
-
             } else {
                 throw new Exception('text');
             }
@@ -103,7 +116,7 @@ class Company
         header("Access-Control-Allow-Headers: *, Access-Control-Allow-Headers, Authorization, X-Requested-With");
         $aa = [];
         $id = $this->data['id'];
-        $sql = "select invoice.id from invoice inner join company1 on invoice.company_id=company1.id where company1.id=$id";
+        $sql = "select invoice.id from invoice inner join company on invoice.company_id=company.id where company.id=$id";
         $stmt = $this->conn->query($sql);
         $stmt->execute();
         $data = $stmt->fetchAll();
@@ -116,7 +129,12 @@ class Company
             $sql = "delete from itemrest where invoice_id = $aa";
             $this->result_itemrest = $this->conn->exec($sql);
         }
-        $sql = "delete from company1 where id=$id";
+        $sql="select file_name from company where id=$id";
+        $this->stmt = $this->conn->query($sql);
+        $this->stmt->execute();
+        $this->data = $this->stmt->fetchAll();
+        $this->up->deleteimage($this->data);
+        $sql = "delete from company where id=$id";
         $this->result_company = $this->conn->exec($sql);
         if ($this->result_company) {
             echo json_encode(array("Success" => "Deleted successfully"));
@@ -139,7 +157,15 @@ class Company
         $this->email = $this->data['email'];
         $this->contact = $this->data['contact'];
         $this->city = $this->data['city'];
-        $this->sql = "update company1 set name='{$this->name}', address='{$this->address}', email='{$this->email}', contact='{$this->contact}', city='{$this->city}' where id=$this->id";
+        $this->file_name = $this->data['file_name'];
+        $this->file_image = $this->data['file_image'];
+        $file_name_new = $this->up->upload($this->data['name'], $this->data['file_name'], $this->data['file_image']);
+        $this->sql = "select file_name from company where id=$this->id";
+        $this->stmt = $this->conn->query($this->sql);
+        $this->stmt->execute();
+        $this->data = $this->stmt->fetchAll();
+        $this->up->deleteimage($this->data);
+        $this->sql = "update company set name='{$this->name}', address='{$this->address}', email='{$this->email}', contact='{$this->contact}', city='{$this->city}', file_name='{$file_name_new}' where id=$this->id";
         $this->result = $this->conn->exec($this->sql);
         if ($this->result) {
             echo json_encode(array("Success" => "Updated successfully"));
@@ -160,7 +186,7 @@ class Company
         header("Access-Control-Allow-Methods: POST");
         header("Access-Control-Allow-Headers: *, Access-Control-Allow-Headers, Authorization, X-Requested-With");
         $this->email = $this->data['email'];
-        $this->sql = "select * from company1 where email=:email";
+        $this->sql = "select * from company where email=:email";
         $this->stmt = $this->conn->prepare($this->sql);
         $this->stmt->bindValue(':email', $this->email);
         $this->stmt->execute();
@@ -182,7 +208,7 @@ class Company
         header("Access-Control-Allow-Credentials: true");
         if (isset($_GET['id'])) {
             $this->cid = $_GET['id'];
-            $this->sql = "select * from company1 where id=:id";
+            $this->sql = "select * from company where id=:id";
             $this->stmt = $this->conn->prepare($this->sql);
             $this->stmt->bindValue(':id', $this->cid);
             $this->stmt->execute();
@@ -197,7 +223,8 @@ class Company
                     'email' => $this->v['email'],
                     'address' => $this->v['address'],
                     'contact' => $this->v['contact'],
-                    'city' => $this->v['city']
+                    'city' => $this->v['city'],
+                    'file_name' => $this->v['file_name']
                 );
 //        Push to array
                 array_push($this->suser['data'], $this->user_data);
@@ -216,7 +243,7 @@ class Company
                 $ordertype = 'asc';
             }
 
-            $this->sql = "select * from company1 order by" . " $field $ordertype";
+            $this->sql = "select * from company order by" . " $field $ordertype";
             $this->stmt = $this->conn->query($this->sql);
             $this->stmt->execute();
             $this->data = $this->stmt->fetchAll();
@@ -251,5 +278,4 @@ class Company
     }
 
 }
-
 

@@ -28,6 +28,24 @@ class Invoice
         $this->data = $d->datas();
     }
 
+    public function InvoiceTable()
+    {
+        try {
+            $sql = "drop table if exists invoice cascade";
+            $this->conn->exec($sql);
+            $sql = "CREATE TABLE Invoice (
+            id serial unique,
+            company_id int,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            primary key(id),
+            foreign key (company_id) references Company(id) on delete cascade)";
+            $this->conn->exec($sql);
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+
+    }
+
     /**
      * Store the invoice information
      */
@@ -88,7 +106,7 @@ class Invoice
 
         if (isset($_GET['id'])) {
             $this->iid = $_GET['id'];
-            $this->sql = "Select itemrest.id as item_id, itemrest.name, unit_cost, quantity, company_id, invoice.id, invoice.created_at, company1.name, address, email, contact, city, total.advance_payment, total_cost, wdiscount, due from itemrest inner join invoice on itemrest.invoice_id=invoice.id inner join company1 on company1.id=invoice.company_id inner join total on total.invoice_id=invoice.id where invoice.id=:invoice_id";
+            $this->sql = "Select itemrest.id as item_id, itemrest.name, unit_cost, quantity, company_id, invoice.id, invoice.created_at, company.name, address, email, contact, city, file_name, total.advance_payment, total_cost, wdiscount, due from itemrest inner join invoice on itemrest.invoice_id=invoice.id inner join company on company.id=invoice.company_id inner join total on total.invoice_id=invoice.id where invoice.id=:invoice_id";
             $this->stmt = $this->conn->prepare($this->sql);
             $this->stmt->bindValue(':invoice_id', $this->iid);
             $this->stmt->execute();
@@ -109,6 +127,7 @@ class Invoice
                     'email' => $this->v['email'],
                     'contact' => $this->v['contact'],
                     'city' => $this->v['city'],
+                    'file_name' => $this->v['file_name'],
                     'invoice_id' => $this->v[5],
                     'advance_payment' => $this->v['advance_payment'],
                     'total_cost' => $this->v['total_cost'],
@@ -123,14 +142,14 @@ class Invoice
             if (isset($_GET['sort'])) {
                 $field = $_GET['sort'];
             } else {
-                $field = 'company1.name';
+                $field = 'company.name';
             }
             if (isset($_GET['order'])) {
                 $ordertype = ($_GET['order'] == 'desc') ? 'desc' : 'asc';
             } else {
                 $ordertype = 'asc';
             }
-            $this->sql = "Select itemrest.id as item_id, itemrest.name, unit_cost, quantity, company_id, invoice.id, invoice.created_at, company1.name, address, email, contact, city from itemrest inner join invoice on itemrest.invoice_id=invoice.id inner join company1 on company1.id=invoice.company_id order by $field $ordertype";
+            $this->sql = "Select itemrest.id as item_id, itemrest.name, unit_cost, quantity, company_id, invoice.id, invoice.created_at, company.name, address, email, contact, city, file_name from itemrest inner join invoice on itemrest.invoice_id=invoice.id inner join company on company.id=invoice.company_id order by $field $ordertype";
             $this->stmt = $this->conn->query($this->sql);
             $this->stmt->execute();
             $this->data = $this->stmt->fetchAll();
@@ -150,6 +169,7 @@ class Invoice
                     'email' => $this->v['email'],
                     'contact' => $this->v['contact'],
                     'city' => $this->v['city'],
+                    'file_name' => $this->v['file_name'],
                     'invoice_id' => $this->v[5]
                 );
 //        Push to array
@@ -196,7 +216,7 @@ class Invoice
         $this->wdiscount = $this->data['wdiscount'];
         $this->due = $this->data['due'];
 //        delete item
-        $this->sql="select itemrest.id from itemrest inner join invoice on itemrest.invoice_id=invoice.id where invoice.id=$this->invoice_id";
+        $this->sql = "select itemrest.id from itemrest inner join invoice on itemrest.invoice_id=invoice.id where invoice.id=$this->invoice_id";
         $this->stmt = $this->conn->query($this->sql);
         $this->stmt->execute();
         $this->data = $this->stmt->fetchAll();
@@ -263,7 +283,7 @@ class Invoice
             if (isset($_GET['sort'])) {
                 $field = $_GET['sort'];
             } else {
-                $field = 'company1.name';
+                $field = 'company.name';
             }
             if (isset($_GET['order'])) {
                 $ordertype = ($_GET['order'] == 'desc') ? 'desc' : 'asc';
@@ -273,7 +293,7 @@ class Invoice
 
             $uid = $_GET['offset'];
             $limit = $_GET['limit'];
-            $sql = "Select invoice.id,company1.name, company1.id as cid from invoice inner join company1 on invoice.company_id=company1.id where invoice.id>=$uid  order by $field $ordertype limit $limit";
+            $sql = "Select invoice.id,company.name, company.id as cid from invoice inner join company on invoice.company_id=company.id where invoice.id>=$uid  order by $field $ordertype limit $limit";
             $stmt = $this->conn->query($sql);
             $stmt->execute();
             $data = $stmt->fetchAll();
@@ -295,14 +315,14 @@ class Invoice
             if (isset($_GET['sort'])) {
                 $field = $_GET['sort'];
             } else {
-                $field = 'company1.name';
+                $field = 'company.name';
             }
             if (isset($_GET['order'])) {
                 $ordertype = ($_GET['order'] == 'desc') ? 'desc' : 'asc';
             } else {
                 $ordertype = 'asc';
             }
-            $sql = "Select invoice.id,company1.name, company1.id as cid from invoice inner join company1 on invoice.company_id=company1.id  order by $field $ordertype";
+            $sql = "Select invoice.id,company.name, company.id as cid from invoice inner join company on invoice.company_id=company.id  order by $field $ordertype";
             $stmt = $this->conn->query($sql);
             $stmt->execute();
             $data = $stmt->fetchAll();
@@ -336,7 +356,7 @@ class Invoice
             if (isset($_GET['sort'])) {
                 $field = $_GET['sort'];
             } else {
-                $field = 'company1.name';
+                $field = 'company.name';
             }
             if (isset($_GET['order'])) {
                 $ordertype = ($_GET['order'] == 'desc') ? 'desc' : 'asc';
@@ -346,7 +366,7 @@ class Invoice
             $name = $_GET["cname"];
             $na = trim($name, ' ""');
             $nam = strtoupper($na);
-            $sql = "Select invoice.id as iid, company1.id as cid, company1.name from invoice inner join company1 on invoice.company_id=company1.id where upper(company1.name) like '%$nam%' order by $field $ordertype";
+            $sql = "Select invoice.id as iid, company.id as cid, company.name from invoice inner join company on invoice.company_id=company.id where upper(company.name) like '%$nam%' order by $field $ordertype";
             $stmt = $this->conn->query($sql);
             $stmt->execute();
             $data = $stmt->fetchAll();
@@ -372,6 +392,46 @@ class Invoice
         } else {
             echo json_encode(["message" => "cname unset"]);
         }
+    }
+
+    public function ItemTable()
+    {
+        try {
+            $sql = "drop table if exists itemrest cascade ";
+            $this->conn->exec($sql);
+            $sql = "create table if not exists itemrest(
+            id serial unique,
+            invoice_id int,
+            name varchar(255),
+            unit_cost numeric (10,2),
+            quantity int )";
+            $this->conn->exec($sql);
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+
+
+    }
+
+    public function TotalTable()
+    {
+
+        try {
+            $sql = "drop table if exists total cascade";
+            $this->conn->exec($sql);
+            $sql = "create table total(
+            id serial unique ,
+            invoice_id int,
+            advance_payment numeric (10,2),
+            total_cost numeric(10,2),
+            wdiscount numeric (10,2),
+            due numeric(10,2),
+            foreign key (invoice_id) references invoice(id) on delete cascade );";
+            $this->conn->exec($sql);
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+
     }
 
     public function __destruct()
