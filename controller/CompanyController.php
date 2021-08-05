@@ -16,8 +16,14 @@ class CompanyController extends Controller
     {
         $invoice = new Invoice();
         try {
-            $invoice->RetrieveInvoice();
-            return (array("Success" => "Invoice data retrieved"));
+            if ($_SESSION['name']==="admin"){
+                $invoice->RetrieveInvoice();
+                return (array("Success" => "Invoice data retrieved"));
+            }
+            else{
+                return "Page not found";
+            }
+
         } catch (Exception $e) {
             Controller::ErrorLog($e);
             return (array("Fail" => $e));
@@ -45,6 +51,7 @@ class CompanyController extends Controller
         }
 
     }
+
 
 
     /**

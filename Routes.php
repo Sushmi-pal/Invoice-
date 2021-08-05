@@ -9,8 +9,16 @@ Route::set('usercreate', function () {
     UserController::UserTable();
 });
 
+Route::set('getcompany', function () {
+    return 'aaa';
+});
+
 Route::set('userpost', function () {
     echo UserController::PostUser();
+});
+
+Route::set('loginuser', function () {
+    UserController::LoginUser();
 });
 
 Route::set('companycreate', function () {

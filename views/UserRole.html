@@ -17,12 +17,20 @@
     <div class="container-invoice">
         <form id="addPostForm" action="" method="post">
             <div id="company_title">
-                <h1>User Page</h1>
+                <h1>Register</h1>
             </div>
 
             <label for="name">Name</label><br>
             <input type="text" id="Name" name="name" class="name" size="50"><br>
             <span id="SpanCname" class="error"></span> <br>
+
+            <label for="password">Password</label><br>
+            <input type="password" id="Password" name="password" class="password" size="50"><br>
+            <span id="SpanPassword" class="error"></span> <br>
+
+            <label for="confirm_password">Confirm_password</label><br>
+            <input type="password" id="Confirm_password" name="confirm_password" class="confirm_password" size="50"><br>
+            <span id="SpanConfirm_password" class="error"></span> <br>
 
             <label for="Address">Address</label><br>
             <input type="text" id="Address" name="address" class="address" size="50"><br>
@@ -56,6 +64,8 @@
         e.preventDefault()
         var name=document.getElementById('Name')
         var address=document.getElementById('Address')
+        var password=document.getElementById('Password')
+        var confirm_password=document.getElementById('Confirm_password')
         var email=document.getElementById('Email')
         var city=document.getElementById('City')
         var contact=document.getElementById('Contact')
@@ -67,6 +77,8 @@
                 email:email.value,
                 city:city.value,
                 contact:contact.value,
+                password:password.value,
+                confirm_password:confirm_password.value,
                 admin_customer:selectedValue.value
             }
             fetch(CommonName + "userpost", {
@@ -77,7 +89,7 @@
                 body: JSON.stringify(myPost)
             }).then(res => res.json()).then(() => {
                 alert("Your information has been saved")
-            }).catch(err=>console.log(err))
+            })
     })
 
 </script>

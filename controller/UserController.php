@@ -27,10 +27,20 @@ class UserController extends Controller{
         $user = new User();
         try {
             $user->PostUser();
-            return json_encode(array("Success"=>"New User Created"));
         } catch (Exception $e) {
             Controller::ErrorLog($e);
-            return json_encode(array("Exception"=>$e));
+            return (array("Exception"=>$e));
+        }
+    }
+
+    public static function LoginUser()
+    {
+        $user = new User();
+        try {
+            echo $user->LoginUser();
+        } catch (Exception $e) {
+            Controller::ErrorLog($e);
+            return (array("Exception"=>$e));
         }
     }
 }
