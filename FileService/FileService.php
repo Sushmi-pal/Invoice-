@@ -29,11 +29,12 @@ class FileService
         return $file_name_new;
     }
 
-    public function deleteimage($data){
-        foreach ($data as $k => $v){
+    public function deleteimage($data)
+    {
+        foreach ($data as $k => $v) {
             $file_name_old = $v['file_name'];
         }
-        if ($file_name_old){
+        if ($file_name_old) {
             try {
                 unlink("uploads/" . $file_name_old);
             } catch (Exception $e) {

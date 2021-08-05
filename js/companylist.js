@@ -97,3 +97,28 @@ function DeleteCompany(id) {
     }
 }
 
+function ChangeImage() {
+    const file = document.querySelector('[type=file]').files[0]
+    const reader = new FileReader();
+    const preview = document.querySelector('img');
+    let file_ext = file['name'].split('.')[1].toLowerCase()
+    let accepted_extension = ['jpg', 'jpeg', 'png']
+    reader.addEventListener("load", function () {
+        preview.style.width = "100%";
+        preview.src = reader.result;
+        localStorage.setItem("UpdateImage", preview.src)
+    }, false);
+
+    if (file) {
+        reader.readAsDataURL(file);
+    }
+    if (!accepted_extension.includes(file_ext)) {
+        let msg = document.getElementById('msg')
+        msg.innerHTML = `.${file_ext} file is not accepted`
+    }
+    else{
+        let msg = document.getElementById('msg')
+        msg.innerHTML=''
+    }
+
+}

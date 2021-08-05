@@ -8,13 +8,17 @@ require_once './model/Invoice.php';
  * @instance $invoice
  * Catch exception if not executed in try block
  */
+
+
 class InvoiceController extends Controller
 {
-
     /**
+     *
      * Calls the updateinvoice() method
+     *
      * @return void
      */
+
     public static function InvoiceUpdate()
     {
         $invoice = new Invoice();
@@ -25,40 +29,13 @@ class InvoiceController extends Controller
         }
     }
 
-    public static function InvoiceTable()
-    {
-        $invoice = new Invoice();
-        try {
-            $invoice->InvoiceTable() ;
-        } catch (Exception $e) {
-            Controller::ErrorLog($e);
-        }
-    }
-
-    public static function ItemTable(){
-        $invoice = new Invoice();
-        try {
-            $invoice->ItemTable();
-            return json_encode(array("Success"=>"Table 'item' created"));
-        } catch (Exception $e) {
-            Controller::ErrorLog($e);
-        }
-    }
-
-    public static function TotalTable(){
-        $invoice = new Invoice();
-        try {
-            $invoice->TotalTable();
-            return json_encode(array("Success"=>"Table 'total' created"));
-        } catch (Exception $e) {
-            Controller::ErrorLog($e);
-        }
-    }
-
     /**
+     *
      * Calls createinvoice
+     *
      * @return void
      */
+
     public static function CreateInvoice()
     {
         $invoice = new Invoice();
@@ -70,9 +47,12 @@ class InvoiceController extends Controller
     }
 
     /**
+     *
      * Deletes the invoice
+     *
      * @return void
      */
+
     public static function DeleteInvoice()
     {
         $invoice = new Invoice();
@@ -84,9 +64,12 @@ class InvoiceController extends Controller
     }
 
     /**
+     *
      * Pagination
+     *
      * @return void
      */
+
     public static function InvoicePages()
     {
         $invoice = new Invoice();
@@ -99,9 +82,12 @@ class InvoiceController extends Controller
     }
 
     /**
+     *
      * Searching
+     *
      * @return void
      */
+
     public static function SearchInvoice()
     {
         $invoice = new Invoice();

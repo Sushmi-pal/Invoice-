@@ -9,6 +9,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
     <link rel="stylesheet" href="../css/addcomp.css">
+    <script type="text/javascript" src="../js/companylist.js"></script>
+
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light">
@@ -56,7 +58,7 @@
             <span id="SpanContact" class="error"></span><br>
 
             <label for="logo">Company Logo</label><br>
-            <input type="file" name="logo" id="logo" onchange="ShowImage()">
+            <input type="file" name="logo" id="logo" onchange="ChangeImage()">
             <div id="msg" role="alert">
             </div>
             <img src="" height="200">
@@ -68,13 +70,13 @@
 
 <script>
     localStorage.setItem("CommonName", "http://localhost/api/")
-    let CommonName = localStorage.getItem("CommonName")
+    // let CommonName = localStorage.getItem("CommonName")
 
-    function GeneralJquery(c) {
-        let a = document.getElementById(`Span${c}`)
-        $(`#${c}`).on("keyup paste", (function () {
-            if (a.innerText === `${c} field is empty`.toUpperCase()) {
-                a.innerText = ''
+    function GeneralJquery(id) {
+        let span_id = document.getElementById(`Span${id}`)
+        $(`#${id}`).on("keyup paste", (function () {
+            if (span_id.innerText === `${id} field is empty`.toUpperCase()) {
+                span_id.innerText = ''
             }
         }))
     }
@@ -120,13 +122,13 @@
     }
 
 
-    function GeneralValidation(id, c) {
-        let a = document.getElementById(`Span${c}`)
+    function GeneralValidation(id, spanid) {
+        let span_id = document.getElementById(`Span${spanid}`)
         if (id.value === '') {
-            a.innerText = `${c} field is empty`.toUpperCase()
+            span_id.innerText = `${spanid} field is empty`.toUpperCase()
             return false
         } else {
-            a.innerText = ''
+            span_id.innerText = ''
             return true
         }
 
@@ -163,7 +165,6 @@
         let ValidateContact = GeneralValidation(phone, 'Contact')
         let EmailValidation = GeneralValidation(email, 'Email')
 
-
         if (ValidateAddress && ValidateCname && EmailValidation && ValidateCity && vEmail && ValidateContact && address.value.length > 2) {
             fetch(CommonName + "companycreate", {
                 method: 'POST',
@@ -176,40 +177,37 @@
                 window.location.href = "Invoice.html"
             }).catch(err => console.log(err));
         }
-
-
     })
 
     $("#Email").on("keyup keypress paste", function () {
         ValidateEmail()
     })
 
-    function ShowImage() {
-        const file = document.querySelector('[type=file]').files[0]
-        const reader = new FileReader();
-        const preview = document.querySelector('img');
-        let file_ext = file['name'].split('.')[1].toLowerCase()
-        let accepted_extension = ['jpg', 'jpeg', 'png']
-        reader.addEventListener("load", function () {
-            // convert image file to base64 string
-            preview.style.width = "100%";
-            preview.src = reader.result;
-            localStorage.setItem("preview", preview.src)
-        }, false);
-
-        if (file) {
-            reader.readAsDataURL(file);
-        }
-
-        if (!accepted_extension.includes(file_ext)) {
-            let msg = document.getElementById('msg')
-            msg.innerHTML = `.${file_ext} file is not accepted`
-        }
-        else{
-            let msg = document.getElementById('msg')
-            msg.innerHTML = " "
-        }
-    }
+    // function ShowImage() {
+    //     const file = document.querySelector('[type=file]').files[0]
+    //     const reader = new FileReader();
+    //     const preview = document.querySelector('img');
+    //     let file_ext = file['name'].split('.')[1].toLowerCase()
+    //     let accepted_extension = ['jpg', 'jpeg', 'png']
+    //     reader.addEventListener("load", function () {
+    //         preview.style.width = "100%";
+    //         preview.src = reader.result;
+    //         localStorage.setItem("preview", preview.src)
+    //     }, false);
+    //
+    //     if (file) {
+    //         reader.readAsDataURL(file);
+    //     }
+    //
+    //     if (!accepted_extension.includes(file_ext)) {
+    //         let msg = document.getElementById('msg')
+    //         msg.innerHTML = `.${file_ext} file is not accepted`
+    //     }
+    //     else{
+    //         let msg = document.getElementById('msg')
+    //         msg.innerHTML = " "
+    //     }
+    // }
 
 
 </script>
