@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.12.1/css/all.css" crossorigin="anonymous">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
-    <link rel="stylesheet" href="../css/invoice1.css">
+    <link rel="stylesheet" href="../css/invoice.css">
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light">
@@ -106,10 +106,9 @@
         let opt = company.options[company.selectedIndex];
         let cid = opt.value
         let CheckEmptyField;
-        if (AllItems.includes("")){
+        if (AllItems.includes("")) {
             CheckEmptyField = false
-        }
-        else{
+        } else {
             CheckEmptyField = true
         }
         if ($('#item-container').children().length !== 0 && CheckEmptyField === true) {
@@ -133,7 +132,7 @@
                 localStorage.setItem("invoice_id", data['invoice_id'])
                 alert("New invoice created")
                 window.location.href = "preview.html#" + data['invoice_id']
-            }).catch(err=>console.log(err))
+            }).catch(err => console.log(err));
 
 
         } else {
@@ -165,10 +164,9 @@
 
 
         // DISCOUNTED COST
-        discount = document.getElementById('discount')
-        tax = document.getElementById('tax')
+        let discount = document.getElementById('discount')
+        let tax = document.getElementById('tax')
         let discounted_price = (1 - (discount.value) / 100) * localStorage.getItem("totalamount")
-
         let tax_price = (1 + (tax.value) / 100) * discounted_price
         dcost.value = tax_price
         localStorage.setItem("discount", discount.value)
@@ -189,7 +187,7 @@
                 text: data['name']
             }));
         });
-    }).catch(err=>console.log(err));
+    }).catch(err => console.log(err));
 
 
     var ItemsJson = JSON.parse(localStorage.getItem("em"))
@@ -213,8 +211,6 @@
         localStorage.setItem("cid", opt.value)
     })
 
-
 </script>
-
 </body>
 </html>

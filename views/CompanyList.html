@@ -38,6 +38,10 @@
                                           placeholder="Email"><br><br>
                         Contact number: <br><input type="text" id="phone" name="phone" class="phone" size="50"
                                                    placeholder="Phone"><br><br>
+                        Company Logo: <br> <img id="image_id" style="height:40px; width: 40px;">
+                        <input type="file" name="logo" id="logo" onchange="ChangeImage()">
+                        <div id="msg" role="alert">
+                        </div>
                     </div>
                     <button type="button" id="submit" name="update" class="btn btn-primary submit"
                             onclick="UpdateCompany()">Update
@@ -103,7 +107,6 @@
 
 
     })
-
 </script>
 </body>
 </html>

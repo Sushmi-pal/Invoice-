@@ -13,10 +13,14 @@ class Route
     public static $validRoutes = array();
 
     /**
+     *
      * @param $route
+     *
      * @param $function
+     *
      * @return void
      */
+
     public static function set($route, $function)
     {
         self::$validRoutes = $route;

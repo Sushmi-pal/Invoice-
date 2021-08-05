@@ -9,6 +9,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
     <link rel="stylesheet" href="../css/addcomp.css">
+    <script type="text/javascript" src="../js/companylist.js"></script>
+
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light">
@@ -30,7 +32,7 @@
 
 <div class="main">
     <div class="container-invoice">
-        <form id="addPostForm" action="Invoice.html" method="post">
+        <form id="addPostForm" action="Invoice.html" method="post" enctype="multipart/form-data">
             <div id="company_title">
                 <h1>Company Info Page</h1>
             </div>
@@ -55,6 +57,12 @@
             <input type="text" id="Contact" name="phone" class="phone" size="50"><br>
             <span id="SpanContact" class="error"></span><br>
 
+            <label for="logo">Company Logo</label><br>
+            <input type="file" name="logo" id="logo" onchange="ChangeImage()">
+            <div id="msg" role="alert">
+            </div>
+            <img src="" height="200">
+
             <button class="btn btn-outline-info" type="submit" id="submit" name="submit">Submit</button>
         </form>
     </div>
@@ -62,13 +70,13 @@
 
 <script>
     localStorage.setItem("CommonName", "http://localhost/api/")
-    let CommonName = localStorage.getItem("CommonName")
+    // let CommonName = localStorage.getItem("CommonName")
 
-    function GeneralJquery(c) {
-        let a = document.getElementById(`Span${c}`)
-        $(`#${c}`).on("keyup paste", (function () {
-            if (a.innerText === `${c} field is empty`.toUpperCase()) {
-                a.innerText = ''
+    function GeneralJquery(id) {
+        let span_id = document.getElementById(`Span${id}`)
+        $(`#${id}`).on("keyup paste", (function () {
+            if (span_id.innerText === `${id} field is empty`.toUpperCase()) {
+                span_id.innerText = ''
             }
         }))
     }
@@ -110,24 +118,21 @@
             body: JSON.stringify({"email": email.value})
         }).then(res => res.json()).then(data => {
             document.getElementById('SpanEmail').innerText = data['Message']
-        }).catch(err=>console.log(err))
+        }).catch(err => console.log(err));
     }
 
 
-    function GeneralValidation(id, c) {
-        let a = document.getElementById(`Span${c}`)
+    function GeneralValidation(id, spanid) {
+        let span_id = document.getElementById(`Span${spanid}`)
         if (id.value === '') {
-            a.innerText = `${c} field is empty`.toUpperCase()
+            span_id.innerText = `${spanid} field is empty`.toUpperCase()
             return false
         } else {
-            a.innerText = ''
+            span_id.innerText = ''
             return true
         }
 
     }
-
-
-
 
     document.getElementById('addPostForm').addEventListener('submit', function (e) {
         e.preventDefault()
@@ -143,13 +148,15 @@
         let email = document.getElementById('Email')
         let city = document.getElementById('City')
         let phone = document.getElementById('Contact')
-
+        let file = document.querySelector('[type=file]').files[0]['name']
         const myPost = {
             email: email.value,
             name: name.value,
             address: address.value,
             contact: phone.value,
-            city: city.value
+            city: city.value,
+            file_name: file,
+            file_image: localStorage.getItem("preview")
         }
 
         let ValidateAddress = GeneralValidation(address, 'Address')
@@ -157,7 +164,6 @@
         let ValidateCname = GeneralValidation(name, 'Cname')
         let ValidateContact = GeneralValidation(phone, 'Contact')
         let EmailValidation = GeneralValidation(email, 'Email')
-
 
         if (ValidateAddress && ValidateCname && EmailValidation && ValidateCity && vEmail && ValidateContact && address.value.length > 2) {
             fetch(CommonName + "companycreate", {
@@ -169,15 +175,41 @@
             }).then(res => res.json()).then(() => {
                 alert("Your information has been saved")
                 window.location.href = "Invoice.html"
-            }).catch(err=>console.log(err))
+            }).catch(err => console.log(err));
         }
-
-
     })
 
     $("#Email").on("keyup keypress paste", function () {
         ValidateEmail()
     })
+
+    // function ShowImage() {
+    //     const file = document.querySelector('[type=file]').files[0]
+    //     const reader = new FileReader();
+    //     const preview = document.querySelector('img');
+    //     let file_ext = file['name'].split('.')[1].toLowerCase()
+    //     let accepted_extension = ['jpg', 'jpeg', 'png']
+    //     reader.addEventListener("load", function () {
+    //         preview.style.width = "100%";
+    //         preview.src = reader.result;
+    //         localStorage.setItem("preview", preview.src)
+    //     }, false);
+    //
+    //     if (file) {
+    //         reader.readAsDataURL(file);
+    //     }
+    //
+    //     if (!accepted_extension.includes(file_ext)) {
+    //         let msg = document.getElementById('msg')
+    //         msg.innerHTML = `.${file_ext} file is not accepted`
+    //     }
+    //     else{
+    //         let msg = document.getElementById('msg')
+    //         msg.innerHTML = " "
+    //     }
+    // }
+
+
 </script>
 </body>
 </html>

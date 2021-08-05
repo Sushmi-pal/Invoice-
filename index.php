@@ -4,7 +4,6 @@ require_once './classes/Route.php';
 require_once './controller/CompanyController.php';
 require_once './controller/InvoiceController.php';
 
-
 Route::set('companycreate', function () {
     CompanyController::CompanyCreate();
 });
@@ -48,9 +47,6 @@ Route::set('invoicepages', function () {
 Route::set('getcompany', function () {
     CompanyController::GetCompany();
 });
-
-
-
 
 
 ?>

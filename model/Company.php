@@ -25,41 +25,14 @@ class Company
     public function __construct()
     {
         $file = new FileService();
-        $this->up=$file;
+        $this->up = $file;
         $database = new Database();
         $this->conn = $database->ConnectMe();
         $this->data = $database->Datas();
         header("Access-Control-Allow-Origin: *");
         header("Access-Control-Allow-Headers: access");
         header("Content-Type: application/json; charset=UTF-8");
-
     }
-
-
-    /**
-     *
-     * Create company table
-     *
-     */
-    public function Table()
-    {
-        try {
-            $sql = "drop table if exists company cascade";
-            $this->conn->exec($sql);
-            $sql = "CREATE TABLE company(
-            id serial unique,
-            name varchar(255),
-            address varchar(255),
-            email varchar(50),
-            contact varchar(20),
-            file_name varchar(255),
-            city varchar(255));";
-            $this->conn->exec($sql);
-        } catch (Exception $e) {
-            echo $e->getMessage();
-        }
-    }
-
 
     /**
      * Store details of company
@@ -69,7 +42,6 @@ class Company
     {
         header("Access-Control-Allow-Methods: POST");
         header("Access-Control-Allow-Headers: *, Access-Control-Allow-Headers, Authorization, X-Requested-With");
-//        header("Content-Type: multipart/form-data; charset=UTF-8");
 
         $this->name = $this->data['name'];
         $this->address = $this->data['address'];
@@ -77,11 +49,6 @@ class Company
         $this->contact = $this->data['contact'];
         $this->city = $this->data['city'];
 
-//        $this->sql = "select * from company where name=:name";
-//        $this->stmt = $this->conn->prepare($this->sql);
-//        $this->stmt->bindValue(':name', $this->name);
-//        $this->stmt->execute();
-//        $this->company_data = $this->stmt->fetchAll();
 
         try {
             if ($this->name && $this->address && $this->email && $this->contact && $this->city) {
@@ -129,7 +96,7 @@ class Company
             $sql = "delete from itemrest where invoice_id = $aa";
             $this->result_itemrest = $this->conn->exec($sql);
         }
-        $sql="select file_name from company where id=$id";
+        $sql = "select file_name from company where id=$id";
         $this->stmt = $this->conn->query($sql);
         $this->stmt->execute();
         $this->data = $this->stmt->fetchAll();

@@ -12,6 +12,7 @@ class CompanyController extends Controller
      * catch Exception if cannot be executed in try block
      * @return Exception[]|string[]
      */
+
     public static function CompanyList()
     {
         $invoice = new Invoice();
@@ -31,6 +32,7 @@ class CompanyController extends Controller
      * Catch Exception if not executed in try block
      * @return Exception[]
      */
+
     public static function CompanyCreate()
     {
         $company = new Company();
@@ -52,6 +54,7 @@ class CompanyController extends Controller
      * Catch Exception if not executed as desired
      * @return Exception[]|string[]
      */
+
     public static function ValidateEmail()
     {
         $company = new Company();
@@ -69,6 +72,7 @@ class CompanyController extends Controller
      * catch exception if not executed in try block
      * @return Exception[]|string[]
      */
+
     public static function CompanyUpdate()
     {
         $company = new Company();
@@ -85,6 +89,7 @@ class CompanyController extends Controller
      * Deletes the details of company by calling deletecompany() method
      * @return Exception[]|string[]
      */
+
     public static function CompanyDelete()
     {
         $company = new Company();
@@ -98,24 +103,10 @@ class CompanyController extends Controller
     }
 
     /**
-     * Creates company table
-     * @return void
-     */
-    public static function CompanyTable()
-    {
-        $company = new Company();
-        try {
-            $company->Table();
-        } catch (Exception $e) {
-            Controller::ErrorLog($e);
-        }
-    }
-
-
-    /**
      * Retrieves company details. It is fetched in dropdown menu in AddCompany.html page
      * @return void
      */
+
     public static function GetCompany()
     {
         $company = new Company();

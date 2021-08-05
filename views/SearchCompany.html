@@ -29,7 +29,6 @@
 </nav>
 <br><br>
 
-
 <form class="d-flex" action="SearchCompany.html">
     <input class="form-control me-2" type="search" name="search" id="search" placeholder="Search" aria-label="Search">
     <button class="btn btn-outline-success" name="submit" value="submit">Submit</button>
@@ -59,15 +58,6 @@
     </table>
 </div>
 <script>
-    // let page = document.getElementById('page')
-    // let TotalLength = localStorage.getItem("SearchInvoiceID").split(",").length
-    // numofPages = Math.ceil(TotalLength / 5)
-    // let op = ''
-    // for (let num = 1; num <= numofPages; num++) {
-    //     op += `<li class="page-item"><a class="page-link" id="${num}" onclick="NewPage(${num})">${num}</a></li>`
-    // }
-    // page.innerHTML = op
-
     $('.column_sort').on('click', function () {
         $('.updown').remove()
         let column_name = $(this).attr('id')
