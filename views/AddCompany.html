@@ -58,11 +58,11 @@
             <span id="SpanContact" class="error"></span><br>
 
             <label for="logo">Company Logo</label><br>
-            <input type="file" name="logo" id="logo" onchange="ChangeImage()">
-            <div id="msg" role="alert">
+            <input type="file" name="logo" id="logo" onchange="ShowImage()">
+            <div id="msg" role="alert" style="color: darkred;">
             </div>
             <img src="" height="200">
-
+            <span id="spanImage" class="error"></span><br>
             <button class="btn btn-outline-info" type="submit" id="submit" name="submit">Submit</button>
         </form>
     </div>
@@ -148,14 +148,15 @@
         let email = document.getElementById('Email')
         let city = document.getElementById('City')
         let phone = document.getElementById('Contact')
-        let file = document.querySelector('[type=file]').files[0]['name']
+        console.log(document.querySelector('[type=file]').files.length)
+        if (document.querySelector('[type=file]').files.length === 1) {
         const myPost = {
             email: email.value,
             name: name.value,
             address: address.value,
             contact: phone.value,
             city: city.value,
-            file_name: file,
+            file_name: document.querySelector('[type=file]').files[0]['name'],
             file_image: localStorage.getItem("preview")
         }
 
@@ -177,37 +178,54 @@
                 window.location.href = "Invoice.html"
             }).catch(err => console.log(err));
         }
+    }
+        else{
+            let msg = document.getElementById('msg')
+            msg.innerText = "Image field is empty".toUpperCase()
+
+            let ValidateAddress = GeneralValidation(address, 'Address')
+            let ValidateCity = GeneralValidation(city, 'City')
+            let ValidateCname = GeneralValidation(name, 'Cname')
+            let ValidateContact = GeneralValidation(phone, 'Contact')
+            let EmailValidation = GeneralValidation(email, 'Email')
+            ValidateAddress
+            ValidateCity
+            ValidateCname
+            ValidateContact
+            EmailValidation
+        }
     })
 
     $("#Email").on("keyup keypress paste", function () {
         ValidateEmail()
     })
 
-    // function ShowImage() {
-    //     const file = document.querySelector('[type=file]').files[0]
-    //     const reader = new FileReader();
-    //     const preview = document.querySelector('img');
-    //     let file_ext = file['name'].split('.')[1].toLowerCase()
-    //     let accepted_extension = ['jpg', 'jpeg', 'png']
-    //     reader.addEventListener("load", function () {
-    //         preview.style.width = "100%";
-    //         preview.src = reader.result;
-    //         localStorage.setItem("preview", preview.src)
-    //     }, false);
-    //
-    //     if (file) {
-    //         reader.readAsDataURL(file);
-    //     }
-    //
-    //     if (!accepted_extension.includes(file_ext)) {
-    //         let msg = document.getElementById('msg')
-    //         msg.innerHTML = `.${file_ext} file is not accepted`
-    //     }
-    //     else{
-    //         let msg = document.getElementById('msg')
-    //         msg.innerHTML = " "
-    //     }
-    // }
+    function ShowImage() {
+        const file = document.querySelector('[type=file]').files[0]
+        const reader = new FileReader();
+        const preview = document.querySelector('img');
+        let file_ext = file['name'].split('.')[1].toLowerCase()
+        let accepted_extension = ['jpg', 'jpeg', 'png']
+        reader.addEventListener("load", function () {
+            preview.style.width = "100%";
+            preview.src = reader.result;
+            localStorage.setItem("preview", preview.src)
+        }, false);
+
+        if (file) {
+            reader.readAsDataURL(file);
+        }
+
+        let msg = document.getElementById('msg')
+
+        if (!accepted_extension.includes(file_ext)) {
+
+            msg.innerHTML = `.${file_ext} file is not accepted`
+        }
+        else{
+            msg.innerHTML = " "
+        }
+    }
 
 
 </script>
