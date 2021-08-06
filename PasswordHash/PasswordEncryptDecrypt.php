@@ -1,5 +1,5 @@
 <?php
-class PasswordEncrptDecrypt{
+class PasswordEncryptDecrypt{
     public function PasswordEncrypt($password){
         $password_hash="123";
         $password_hash.=$password;

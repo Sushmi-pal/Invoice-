@@ -53,6 +53,7 @@
             },
             body: JSON.stringify(myPost)
         }).then(res => res.json()).then((data) => {
+            console.log(data)
             if (data["role"]==="admin"){
                 window.location.href="AddCompany.html"
             }

@@ -3,6 +3,7 @@ require_once 'Controller.php';
 require_once './model/Company.php';
 require_once './model/Invoice.php';
 require_once './model/db.php';
+require_once './PermissionClass/Permission.php';
 
 class CompanyController extends Controller
 {
@@ -15,12 +16,13 @@ class CompanyController extends Controller
     public static function CompanyList()
     {
         $invoice = new Invoice();
+        $permission = new Permission();
         try {
-            if ($_SESSION['name']==="admin"){
+            $permission_result = $permission->CheckForPermission($_SESSION['name'], 'company_show');
+            if ($permission_result === "true") {
                 $invoice->RetrieveInvoice();
                 return (array("Success" => "Invoice data retrieved"));
-            }
-            else{
+            } else {
                 return "Page not found";
             }
 
@@ -40,18 +42,24 @@ class CompanyController extends Controller
     public static function CompanyCreate()
     {
         $company = new Company();
-        $result = $company->PostCompany();
+        $permission = new Permission();
         try {
-            if ($result) {
-                echo json_encode(array("Success" => "New Company created"));
+            $permission_result = $permission->CheckForPermission($_SESSION['name'], 'company_create');
+            if ($permission_result === "true") {
+                $result = $company->PostCompany();
+                if ($result) {
+                    echo json_encode(array("Success" => "New Company created"));
+                }
+            } else {
+                return "Page Not Found";
             }
+
         } catch (Exception $e) {
             Controller::ErrorLog($e);
             return (array("Exception occured" => $e));
         }
 
     }
-
 
 
     /**
@@ -62,9 +70,16 @@ class CompanyController extends Controller
     public static function ValidateEmail()
     {
         $company = new Company();
+        $permission = new Permission();
         try {
-            $company->EmailValidation();
-            return (array("Success" => "Email Validated Successfully"));
+            $permission_result = $permission->CheckForPermission($_SESSION['name'], 'email_validate');
+            if ($permission_result === "true") {
+                $company->EmailValidation();
+                return (array("Success" => "Email Validated Successfully"));
+            } else {
+                return "Page Not Found";
+            }
+
         } catch (Exception $e) {
             Controller::ErrorLog($e);
             return (array("Failed" => $e));
@@ -79,9 +94,15 @@ class CompanyController extends Controller
     public static function CompanyUpdate()
     {
         $company = new Company();
+        $permission = new Permission();
         try {
-            $company->UpdateCompany();
-            return (array("Success" => "Company Details Updated Successfully"));
+            $permission_result = $permission->CheckForPermission($_SESSION['name'], 'company_edit');
+            if ($permission_result === "true") {
+                $company->UpdateCompany();
+                return (array("Success" => "Company Details Updated Successfully"));
+            } else {
+                return "Page Not Found";
+            }
         } catch (Exception $e) {
             Controller::ErrorLog($e);
             return (array("Failed" => $e));
@@ -95,9 +116,15 @@ class CompanyController extends Controller
     public static function CompanyDelete()
     {
         $company = new Company();
+        $permission = new Permission();
         try {
-            $company->DeleteCompany();
-            return (array("Success" => "Company Details Deleted Successfully"));
+            $permission_result = $permission->CheckForPermission($_SESSION['name'], 'email_validate');
+            if ($permission_result === "true") {
+                $company->DeleteCompany();
+                return (array("Success" => "Company Details Deleted Successfully"));
+            } else {
+                return "Page Not Found";
+            }
         } catch (Exception $e) {
             Controller::ErrorLog($e);
             return array("Failed" => $e);
@@ -126,8 +153,14 @@ class CompanyController extends Controller
     public static function GetCompany()
     {
         $company = new Company();
+        $permission = new Permission();
         try {
-            $company->GetCompany();
+            $permission_result = $permission->CheckForPermission($_SESSION['name'], 'company_show');
+            if ($permission_result === "true") {
+                $company->GetCompany();
+            } else {
+                return "Page Not Found";
+            }
         } catch (Exception $e) {
             Controller::ErrorLog($e);
         }

@@ -18,8 +18,15 @@ class InvoiceController extends Controller
     public static function InvoiceUpdate()
     {
         $invoice = new Invoice();
+
+        $permission = new Permission();
         try {
-            $invoice->UpdateInvoice();
+            $permission_result = $permission->CheckForPermission($_SESSION['name'], 'invoice_edit');
+            if ($permission_result === "true") {
+                $invoice->UpdateInvoice();
+            } else {
+                return 'Page Not Found';
+            }
         } catch (Exception $e) {
             Controller::ErrorLog($e);
         }
@@ -32,8 +39,14 @@ class InvoiceController extends Controller
     public static function CreateInvoice()
     {
         $invoice = new Invoice();
+        $permission = new Permission();
         try {
-            $invoice->CreateInvoice();
+            $permission_result = $permission->CheckForPermission($_SESSION['name'], 'invoice_create');
+            if ($permission_result === "true") {
+                $invoice->CreateInvoice();
+            } else {
+                return 'Page Not Found';
+            }
         } catch (Exception $e) {
             Controller::ErrorLog($e);
         }
@@ -46,8 +59,14 @@ class InvoiceController extends Controller
     public static function DeleteInvoice()
     {
         $invoice = new Invoice();
+        $permission = new Permission();
         try {
-            $invoice->DeleteInvoice();
+            $permission_result = $permission->CheckForPermission($_SESSION['name'], 'invoice_delete');
+            if ($permission_result === "true") {
+                $invoice->DeleteInvoice();
+            } else {
+                return 'Page Not Found';
+            }
         } catch (Exception $e) {
             Controller::ErrorLog($e);
         }
@@ -60,8 +79,14 @@ class InvoiceController extends Controller
     public static function InvoicePages()
     {
         $invoice = new Invoice();
+        $permission = new Permission();
         try {
-            $invoice->InvoicePages();
+            $permission_result = $permission->CheckForPermission($_SESSION['name'], 'invoicepage_create');
+            if ($permission_result === "true") {
+                $invoice->InvoicePages();
+            } else {
+                return 'Page Not Found';
+            }
         } catch (Exception $e) {
             Controller::ErrorLog($e);
         }
@@ -75,8 +100,14 @@ class InvoiceController extends Controller
     public static function SearchInvoice()
     {
         $invoice = new Invoice();
+        $permission = new Permission();
         try {
-            $invoice->SearchInvoice();
+            $permission_result = $permission->CheckForPermission($_SESSION['name'], 'invoice_search');
+            if ($permission_result === "true") {
+                $invoice->SearchInvoice();
+            } else {
+                return 'Page Not Found';
+            }
         } catch (Exception $e) {
             Controller::ErrorLog($e);
         }

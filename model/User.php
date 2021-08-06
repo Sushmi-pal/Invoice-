@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once 'db.php';
-require_once './PasswordHash/PasswordEncrptDecrypt.php';
+require_once './PasswordHash/PasswordEncryptDecrypt.php';
 
 class User
 {
@@ -24,7 +24,7 @@ class User
      */
     public function __construct()
     {
-        $this->pwd= new PasswordEncrptDecrypt();
+        $this->pwd= new PasswordEncryptDecrypt();
         $database = new Database();
         $this->conn = $database->ConnectMe();
         $this->data = $database->Datas();
@@ -40,72 +40,12 @@ class User
      * Create user table
      *
      */
-    public function UserTable()
-    {
-        try {
-            $sql = "drop table if exists Users cascade";
-            $this->conn->exec($sql);
-            $sql = "CREATE TABLE Users(
-            id serial unique,
-            name varchar(255),
-            address varchar(255),
-            email varchar(50),
-            contact varchar(20),
-            admin_customer int,
-            password varchar(255),
-            confirm_password varchar(255),
-            city varchar(255),
-            foreign key (admin_customer) references UserRole(id) on delete cascade)";
-            $this->conn->exec($sql);
-        } catch (Exception $e) {
-            echo $e->getMessage();
-        }
-    }
 
-    public function RoleTable(){
-        try{
-//            $sql = "drop table if exists UserRole cascade";
-//            $this->conn->exec($sql);
-            $sql="CREATE TABLE UserRole(
-            id serial unique,
-            role varchar(10));";
-            $this->conn->exec($sql);
-        }
-        catch (Exception $e){
-            echo $e->getMessage();
-        }
-    }
-
-    public function RolePermission(){
-        $sql="drop table if exists RolePermission cascade";
-        $this->conn->exec($sql);
-        $sql="CREATE TABLE RolePermission(
-            id serial unique,
-            role_id int,
-            permission_id int,
-            foreign key (role_id) references UserRole(id) on delete cascade,
-            foreign key (permission_id) references Permissions(id) on delete cascade );";
-        $this->conn->exec($sql);
-    }
-
-    public function PermissionTable(){
-        try{
-            $sql="drop table if exists Permissions cascade";
-            $this->conn->exec($sql);
-            $sql="CREATE TABLE Permissions(
-            id serial unique,
-            permissions text);";
-            $this->conn->exec($sql);
-        }
-        catch (Exception $e){
-            echo $e->getMessage();
-        }
-    }
 
     public function PostPermission(){
         $permissions=['invoice_create', 'invoice_edit', 'invoice_show', 'invoice_delete', 'invoice_access',
             'company_create', 'company_edit', 'company_show', 'company_delete', 'company_access',
-            'file_create', 'file_edit', 'file_show', 'file_delete', 'file_access'];
+            'file_create', 'file_edit', 'file_show', 'file_delete', 'file_access', 'email_validate'];
         foreach ($permissions as $permission){
             $sql="insert into permissions(permissions) values('$permission')";
             $this->conn->exec($sql);
@@ -137,15 +77,15 @@ class User
 
         try {
             if ($this->name && $this->address && $this->email && $this->contact && $this->city && $this->admin_customer && $similar_password==="true") {
-                $sql="select * from userrole where role='$this->admin_customer'";
+                $sql="select * from role where role='$this->admin_customer'";
                 $stmt = $this->conn->query($sql);
                 $stmt->execute();
                 $data = $stmt->fetchAll();
                 if (count($data)===0){
-                    $sql = "insert into userrole(role) values('$this->admin_customer')";
+                    $sql = "insert into role(role) values('$this->admin_customer')";
                     $this->conn->exec($sql);
                 }
-                $sql="select id from userrole where role='$this->admin_customer'";
+                $sql="select id from role where role='$this->admin_customer'";
                 $stmt = $this->conn->query($sql);
                 $stmt->execute();
                 $data = $stmt->fetchAll();
@@ -164,6 +104,21 @@ class User
                 $query->bindValue(':password',$this->password_hash);
                 $query->bindValue(':confirm_password',$this->confirm_password_hash);
                 $result = $query->execute();
+
+                $sql="select id from users where email='$this->email'";
+                $stmt = $this->conn->query($sql);
+                $stmt->execute();
+                $data = $stmt->fetchAll();
+                foreach ($data as $k => $v) {
+                    $user_id = $v['id'];
+                }
+                echo $user_id;
+
+                $sql = "insert into userrole(role_id, user_id) values(:role_id,:user_id)";
+                $query=$this->conn->prepare($sql);
+                $query->bindValue(':user_id',$user_id);
+                $query->bindValue(':role_id',$role_id);
+                $result_userrole = $query->execute();
                 return (array)$result;
 
 
@@ -191,7 +146,7 @@ class User
                 $_SESSION["role_id"]= $v['admin_customer'];
             }
             $role_id=$_SESSION["role_id"];
-            $sql="select role from userrole where id=$role_id";
+            $sql="select role from role where id=$role_id";
             $stmt = $this->conn->query($sql);
             $stmt->execute();
             $data = $stmt->fetchAll();
@@ -222,6 +177,7 @@ $user=new User();
 //$user->UserTable();
 //$user->RoleTable();
 //$user->PermissionTable();
+//$user->UserRole();
 //$user->PostPermission();
 //try{
 //    $result=$user->Table();
