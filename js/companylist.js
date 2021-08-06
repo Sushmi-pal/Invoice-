@@ -30,14 +30,13 @@ function EditCompany(id) {
     localStorage.setItem("CompanyId", id)
 
     fetch(CommonName + "getcompany?id=" + id).then(res => res.json()).then(data => {
-        console.log(data)
         cname.value = data.data[0]['name']
         address.value = data.data[0]['address']
         email.value = data.data[0]['email']
         city.value = data.data[0]['city']
         phone.value = data.data[0]['contact']
         image_id.src = "../uploads/" + data.data[0]['file_name']
-        console.log(image_id.src)
+        localStorage.setItem("file_name",data.data[0]["file_name"])
     }).catch(err => console.log(err))
 }
 
@@ -48,7 +47,6 @@ function UpdateCompany() {
     let city = document.getElementById('company_city')
     let phone = document.getElementById('phone')
     let id = localStorage.getItem("CompanyId")
-    let file = document.querySelector('[type=file]').files[0]['name']
 
     let body = {
         id: id,
@@ -57,7 +55,7 @@ function UpdateCompany() {
         email: email.value,
         contact: phone.value,
         city: city.value,
-        file_name: file,
+        file_name: localStorage.getItem("file_name"),
         file_image: localStorage.getItem("UpdateImage")
 
     }

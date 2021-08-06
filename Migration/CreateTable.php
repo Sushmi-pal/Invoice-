@@ -105,3 +105,4 @@ $table->CompanyTable();
 $table->InvoiceTable();
 $table->ItemTable();
 $table->InvoiceTable();
+$table->TotalTable();
