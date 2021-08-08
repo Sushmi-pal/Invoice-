@@ -257,86 +257,17 @@ class Invoice
 
     /**
      * For pagination
+     *
+     * Search on the basis of company name
+     *
      */
 
     public function InvoicePages()
     {
         header("Access-Control-Allow-Methods: GET");
         header("Access-Control-Allow-Credentials: true");
-        if (isset($_GET['offset']) & isset($_GET['limit'])) {
-            if (isset($_GET['sort'])) {
-                $field = $_GET['sort'];
-            } else {
-                $field = 'company.name';
-            }
-            if (isset($_GET['order'])) {
-                $ordertype = ($_GET['order'] == 'desc') ? 'desc' : 'asc';
-            } else {
-                $ordertype = 'asc';
-            }
-
-            $uid = $_GET['offset'];
-            $limit = $_GET['limit'];
-            $sql = "Select invoice.id,company.name, company.id as cid from invoice inner join company on invoice.company_id=company.id where invoice.id>=$uid  order by $field $ordertype limit $limit";
-            $stmt = $this->conn->query($sql);
-            $stmt->execute();
-            $data = $stmt->fetchAll();
-            $suser = array();
-            $suser['data'] = array();
-
-            foreach ($data as $k => $v) {
-                $user_data = array(
-                    'id' => $v[0],
-                    'cid' => $v['cid'],
-                    'cname' => $v['name']
-
-                );
-//        Push to array
-                array_push($suser['data'], $user_data);
-            }
-            echo json_encode($suser);
-        } else {
-            if (isset($_GET['sort'])) {
-                $field = $_GET['sort'];
-            } else {
-                $field = 'company.name';
-            }
-            if (isset($_GET['order'])) {
-                $ordertype = ($_GET['order'] == 'desc') ? 'desc' : 'asc';
-            } else {
-                $ordertype = 'asc';
-            }
-            $sql = "Select invoice.id,company.name, company.id as cid from invoice inner join company on invoice.company_id=company.id  order by $field $ordertype";
-            $stmt = $this->conn->query($sql);
-            $stmt->execute();
-            $data = $stmt->fetchAll();
-            $suser = array();
-            $suser['data'] = array();
-
-            foreach ($data as $k => $v) {
-                $user_data = array(
-                    'id' => $v[0],
-                    'cid' => $v['cid'],
-                    'cname' => $v['name']
-
-                );
-//        Push to array
-                array_push($suser['data'], $user_data);
-            }
-            echo json_encode($suser);
-        }
-    }
-
-    /**
-     * Search on the basis of company name
-     */
-
-    public function SearchInvoice()
-    {
-        header("Access-Control-Allow-Methods: GET");
-        header("Access-Control-Allow-Credentials: true");
         $kname = isset($_GET["cname"]) ? $_GET["cname"] : "";
-        if ($kname) {
+        if (isset($_GET['page'])) {
             if (isset($_GET['sort'])) {
                 $field = $_GET['sort'];
             } else {
@@ -347,36 +278,101 @@ class Invoice
             } else {
                 $ordertype = 'asc';
             }
-            $name = $_GET["cname"];
+            $name = $kname;
             $na = trim($name, ' ""');
             $nam = strtoupper($na);
-            $sql = "Select invoice.id as iid, company.id as cid, company.name from invoice inner join company on invoice.company_id=company.id where upper(company.name) like '%$nam%' order by $field $ordertype";
+//            $uid = $_GET['offset'];
+
+            $page=$_GET['page'];
+            $sql = "Select invoice.id from invoice inner join company on invoice.company_id=company.id";
             $stmt = $this->conn->query($sql);
             $stmt->execute();
             $data = $stmt->fetchAll();
-            if (count($data) > 0) {
+            $off=array();
+            foreach ($data as $k=>$v){
+            array_push($off, $v['id']);
+            }
+//            foreach ($off as $k=>$v){
+//                foreach ($v as $a=>$b){
+//                    echo $b;
+//                }
+//            }
+            $uid= $off[($page-1)*5];
+            echo $kname!=="";
+            if($kname === ""){
+            $sql = "Select invoice.id,company.name, company.id as cid from invoice inner join company on invoice.company_id=company.id where invoice.id>=$uid  order by $field $ordertype limit 5";
+            $stmt = $this->conn->query($sql);
+            $stmt->execute();
+            $data = $stmt->fetchAll();
+            $suser = array();
+            $suser['data'] = array();
+
+            foreach ($data as $k => $v) {
+                $user_data = array(
+                    'id' => $v[0],
+                    'cid' => $v['cid'],
+                    'cname' => $v['name']
+
+                );
+//        Push to array
+                array_push($suser['data'], $user_data);
+            }
+            echo json_encode($suser);
+            }
+            else{
+                $sql = "Select invoice.id as iid,company.name, company.id as cid from invoice inner join company on invoice.company_id=company.id where invoice.id>=$uid and upper(company.name)='$kname'  order by $field $ordertype limit 5";
+                $stmt = $this->conn->query($sql);
+                $stmt->execute();
+                $data = $stmt->fetchAll();
                 $suser = array();
                 $suser['data'] = array();
 
                 foreach ($data as $k => $v) {
                     $user_data = array(
-                        'iid' => $v['iid'],
+                        'iid'=>$v['iid'],
+                        'id' => $v[0],
                         'cid' => $v['cid'],
-                        'name' => $v['name']
+                        'cname' => $v['name']
+
                     );
 //        Push to array
                     array_push($suser['data'], $user_data);
                 }
                 echo json_encode($suser);
-            } else {
-                echo json_encode(["message" => "not found"]);
             }
-
-
         } else {
-            echo json_encode(["message" => "cname unset"]);
+            if (isset($_GET['sort'])) {
+                $field = $_GET['sort'];
+            } else {
+                $field = 'company.name';
+            }
+            if (isset($_GET['order'])) {
+                $ordertype = ($_GET['order'] == 'desc') ? 'desc' : 'asc';
+            } else {
+                $ordertype = 'asc';
+            }
+            $sql = "Select invoice.id as iid,company.name, company.id as cid from invoice inner join company on invoice.company_id=company.id  where upper(company.name)='$kname' order by $field $ordertype";
+            $stmt = $this->conn->query($sql);
+            $stmt->execute();
+            $data = $stmt->fetchAll();
+            $suser = array();
+            $suser['data'] = array();
+
+            foreach ($data as $k => $v) {
+                $user_data = array(
+                    'iid'=>$v['iid'],
+                    'id' => $v[0],
+                    'cid' => $v['cid'],
+                    'cname' => $v['name']
+
+                );
+//        Push to array
+                array_push($suser['data'], $user_data);
+            }
+            echo json_encode($suser);
         }
     }
+
 
 
 

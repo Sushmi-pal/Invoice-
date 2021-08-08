@@ -3,18 +3,18 @@ let name = ((loc.split('&')[0]).split('=')[1]).toUpperCase()
 let CommonName = localStorage.getItem("CommonName")
 
 function SearchByCname(column_name, order) {
-    // console.log(CommonName+"searchinvoice?cname=" + name+"&sort="+column_name+"&order="+order+"&offset="+storedId[Starting_Inv_ID]+"&limit=5")
-    fetch(CommonName + "searchinvoice?cname=" + name + "&sort=" + column_name + "&order=" + order).then(res => res.json()).then(data => {
-        console.log(data)
+
+    fetch(CommonName + "invoicepages?cname=" + name + "&sort=" + column_name + "&order=" + order).then(res => res.json()).then(data => {
         var id = localStorage.getItem("number")
         let tbody = document.getElementById("invoice_details_table")
         let op = "<tr>"
         let SearchIid = []
         data.data.forEach((data, index) => {
+            console.log(data['cname'])
             SearchIid.push(data['iid'])
             op += `<th scope="row">${index + 1}</th>`
             op += `<td>InvoiceItem${data['iid']}</td>`
-            op += `<td>${data['name']}</td>`
+            op += `<td>${data['cname']}</td>`
             op += `<td><a class="fa fa-eye" href="preview.html#${data['iid']}" style="color: black;" ></a> </td>`
             op += `<td><a class="fa fa-edit" href="update.html#${data['iid']}" style="color: black;"></a> </td>`
             op += `<td><a class="fa fa-trash" onclick="DelInvoice(${data['iid']})" style="color: black"></a> </td>`

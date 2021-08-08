@@ -20,12 +20,15 @@ class FileService
         $file_ext = explode(".", $this->file_name);
         $file_actual_ext = strtolower(end($file_ext));
         if ($file_actual_ext === 'png' or $file_actual_ext === 'jpg' or $file_actual_ext === 'jpeg') {
-            $file_name_new = uniqid(' ', true) . ",$company_name" . "." . $file_actual_ext;
+            $file_name_new = uniqid(' ', true) . "$company_name" . "." . $file_actual_ext;
         } else {
             echo "Allowed file extension (jpg, jpeg, png)";
+            $file_name_new = "false";
         }
-        define('DIRECTORY', 'C:/xampp/htdocs/api/uploads/');
-        file_put_contents(DIRECTORY . $file_name_new, $content);
+        if ($file_name_new !== "false") {
+            define('DIRECTORY', 'C:/xampp/htdocs/api/uploads/');
+            file_put_contents(DIRECTORY . $file_name_new, $content);
+        }
         return $file_name_new;
     }
 

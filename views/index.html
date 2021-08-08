@@ -71,9 +71,7 @@
         var active=document.getElementById(id)
         active.classList.add(`active`)
         localStorage.setItem("number", id)
-        let Starting_Inv_ID = (id - 1) * 5
-        let storedId = SplitByComma.sort((a, b) => a - b);
-        fetch(CommonName + "invoicepages?offset=" + storedId[Starting_Inv_ID] + "&sort=" + column_name + "&order=" + order + "&limit=5").then(res => res.json()).then(data => {
+        fetch(CommonName + "invoicepages?page=" + id + "&sort=" + column_name + "&order=" + order).then(res => res.json()).then(data => {
             let tbody = document.getElementById("invoice_details_table")
             localStorage.setItem("total length1", data.data.length)
             let op = "<tr>"

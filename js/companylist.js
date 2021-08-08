@@ -27,6 +27,7 @@ function EditCompany(id) {
     let city = document.getElementById('company_city')
     let phone = document.getElementById('phone')
     let image_id = document.getElementById('image_id')
+    let logo = document.getElementById('logo')
     localStorage.setItem("CompanyId", id)
 
     fetch(CommonName + "getcompany?id=" + id).then(res => res.json()).then(data => {
@@ -36,7 +37,7 @@ function EditCompany(id) {
         city.value = data.data[0]['city']
         phone.value = data.data[0]['contact']
         image_id.src = "../uploads/" + data.data[0]['file_name']
-        localStorage.setItem("file_name",data.data[0]["file_name"])
+        logo.innerText=data.data[0]['file_name']
     }).catch(err => console.log(err))
 }
 
@@ -55,7 +56,7 @@ function UpdateCompany() {
         email: email.value,
         contact: phone.value,
         city: city.value,
-        file_name: localStorage.getItem("file_name"),
+        file_name: document.querySelector('[type=file]').files[0]['name'],
         file_image: localStorage.getItem("UpdateImage")
 
     }
@@ -97,7 +98,9 @@ function DeleteCompany(id) {
 
 function ChangeImage() {
     const file = document.querySelector('[type=file]').files[0]
+    console.log(file)
     const reader = new FileReader();
+
     const preview = document.querySelector('img');
     let file_ext = file['name'].split('.')[1].toLowerCase()
     let accepted_extension = ['jpg', 'jpeg', 'png']
@@ -111,10 +114,13 @@ function ChangeImage() {
         reader.readAsDataURL(file);
     }
     if (!accepted_extension.includes(file_ext)) {
+        console.log(document.querySelector('[type=file]').files[0]['name'])
+        localStorage.setItem("file_name",document.querySelector('[type=file]').files[0]['name'])
         let msg = document.getElementById('msg')
         msg.innerHTML = `.${file_ext} file is not accepted`
     }
     else{
+        localStorage.setItem("file_name",document.querySelector('[type=file]').files[0]['name'])
         let msg = document.getElementById('msg')
         msg.innerHTML=''
     }
