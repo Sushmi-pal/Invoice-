@@ -131,14 +131,17 @@ class Company
         $this->stmt = $this->conn->query($this->sql);
         $this->stmt->execute();
         $this->data = $this->stmt->fetchAll();
-        $this->up->deleteimage($this->data);
-        $this->sql = "update company set name='{$this->name}', address='{$this->address}', email='{$this->email}', contact='{$this->contact}', city='{$this->city}', file_name='{$file_name_new}' where id=$this->id";
-        $this->result = $this->conn->exec($this->sql);
-        if ($this->result) {
-            echo json_encode(array("Success" => "Updated successfully"));
-        } else {
-            echo json_encode(array("Fail" => "Update fail"));
+        if ($file_name_new !=="false"){
+            $this->up->deleteimage($this->data);
+            $this->sql = "update company set name='{$this->name}', address='{$this->address}', email='{$this->email}', contact='{$this->contact}', city='{$this->city}', file_name='{$file_name_new}' where id=$this->id";
+            $this->result = $this->conn->exec($this->sql);
+            if ($this->result) {
+                echo json_encode(array("Success" => "Updated successfully"));
+            } else {
+                echo json_encode(array("Fail" => "Update fail"));
+            }
         }
+
     }
 
     /**
