@@ -107,11 +107,12 @@
         SplitResult.forEach(function (data) {
             ItemArray.push(data.split("=")[1])
         })
+        console.log(ItemArray[1].replace("%20'",""))
         for (let index = 0; index < ItemArray.length; index++) {
             item.push({
                 "invoice_id": window.location.href.split("#")[1],
                 "id": ItemArray[index],
-                "name": ItemArray[index + 1],
+                "name": ItemArray[index + 1].replace("%20","").replaceAll("'",""),
                 "cost": ItemArray[index + 2],
                 "quantity": ItemArray[index + 3]
             })
@@ -145,7 +146,7 @@
             }).then(res => res.json()).then(() => {
                 alert("Invoice updated")
                 window.location.href = "index.html"
-            }).catch(err=>console.log(err))
+            })
         } else {
             alert("Check itemlist")
         }

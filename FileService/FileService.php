@@ -39,7 +39,8 @@ class FileService
         }
         if ($file_name_old) {
             try {
-                unlink("uploads/" . $file_name_old);
+                $left_trimmed_file_name=ltrim($file_name_old);
+                unlink("uploads/  ".$left_trimmed_file_name);
             } catch (Exception $e) {
                 echo $e->getMessage();
             }

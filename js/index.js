@@ -51,7 +51,7 @@ function SearchByCname() {
                 }
             )
         }
-    ).catch(err=>console.log(err))
+    )
 }
 
 function EditInvoice(id){

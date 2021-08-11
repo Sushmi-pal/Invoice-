@@ -1,6 +1,11 @@
 <?php
 require_once 'db.php';
-
+require_once './DBQuery/PostQuery.php';
+require_once './DBQuery/RetrieveQuery.php';
+require_once './DBQuery/DeleteQuery.php';
+require_once './DBQuery/UpdateQuery.php';
+require_once './ServiceClass/InvoiceRequest.php';
+require_once './ServiceClass/CompanyRequest.php';
 
 /**
  * Class Invoice
@@ -26,6 +31,13 @@ class Invoice
         $d = new Database();
         $this->conn = $d->connectme();
         $this->data = $d->datas();
+        $this->retrieve=new RetrieveQuery();
+        $this->update=new UpdateQuery();
+        $this->delete=new DeleteQuery();
+        $this->invoice_request=new InvoiceRequest();
+        $this->company_request=new CompanyRequest();
+        $this->post_invoice=new PostQuery();
+
     }
 
 
@@ -43,14 +55,8 @@ class Invoice
         $this->total_cost = $this->data['total'];
         $this->wdiscount = $this->data['wdiscount'];
         $this->due = $this->data['due'];
-        $this->sql = "insert into invoice(company_id) values (:company_id)";
-        $this->stmt = $this->conn->prepare($this->sql);
-        $this->stmt->bindValue(':company_id', $this->company_id);
-        $result = $this->stmt->execute();
-        $this->sql = "select id from invoice";
-        $this->stmt = $this->conn->query($this->sql);
-        $this->stmt->execute();
-        $this->data = $this->stmt->fetchAll();
+        $result=$this->post_invoice->Insert('invoice', 'company_id', "$this->company_id");
+        $this->data = $this->retrieve->Get("id", "invoice", "", "", "", "", "", "");
         $invoiceid = max($this->data)['id'];
         foreach ($this->itemarray as $v) {
             foreach ($v as $a) {
@@ -59,9 +65,7 @@ class Invoice
                 $quantity = $a['quantity'];
                 try {
                     if ($name != " " || cost != " " || $quantity != " ") {
-
-                        $this->sql = "insert into itemrest(invoice_id, name, unit_cost, quantity) values ($invoiceid, '$name',$cost, $quantity)";
-                        $result_itemrest = $this->conn->exec($this->sql);
+                        $result_itemrest=$this->post_invoice->Insert('itemrest', 'invoice_id,name,unit_cost,quantity', "$invoiceid, '$name',$cost, $quantity");
                     }
 
                 } catch (Exception $e) {
@@ -70,8 +74,7 @@ class Invoice
 
             }
         }
-        $this->sql = "insert into total(invoice_id, advance_payment, total_cost, wdiscount, due) values($invoiceid, $this->advance, $this->total_cost, $this->wdiscount, $this->due)";
-        $result_total = $this->conn->exec($this->sql);
+        $result_total = $this->post_invoice->Insert('total','invoice_id,advance_payment,total_cost,wdiscount,due', "$invoiceid, $this->advance, $this->total_cost, $this->wdiscount, $this->due");
 
         if ($result && $result_itemrest && $result_total) {
             echo json_encode(array("Success" => "Invoice Created", "invoice_id" => $invoiceid));
@@ -90,76 +93,20 @@ class Invoice
 
         if (isset($_GET['id'])) {
             $this->iid = $_GET['id'];
-            $this->sql = "Select itemrest.id as item_id, itemrest.name, unit_cost, quantity, company_id, invoice.id, invoice.created_at, company.name, address, email, contact, city, file_name, total.advance_payment, total_cost, wdiscount, due from itemrest inner join invoice on itemrest.invoice_id=invoice.id inner join company on company.id=invoice.company_id inner join total on total.invoice_id=invoice.id where invoice.id=:invoice_id";
-            $this->stmt = $this->conn->prepare($this->sql);
-            $this->stmt->bindValue(':invoice_id', $this->iid);
-            $this->stmt->execute();
-            $this->data = $this->stmt->fetchAll();
-            $this->suser = array();
-            $this->suser['data'] = array();
-
-            foreach ($this->data as $this->k => $this->v) {
-                $this->user_data = array(
-                    'item_id' => $this->v['item_id'],
-                    'company_name' => $this->v['name'],
-                    'item_name' => $this->v[1],
-                    'unit_cost' => $this->v['unit_cost'],
-                    'quantity' => $this->v['quantity'],
-                    'company_id' => $this->v['company_id'],
-                    'created_at' => $this->v['created_at'],
-                    'address' => $this->v['address'],
-                    'email' => $this->v['email'],
-                    'contact' => $this->v['contact'],
-                    'city' => $this->v['city'],
-                    'file_name' => $this->v['file_name'],
-                    'invoice_id' => $this->v[5],
-                    'advance_payment' => $this->v['advance_payment'],
-                    'total_cost' => $this->v['total_cost'],
-                    'wdiscount' => $this->v['wdiscount'],
-                    'due' => $this->v['due']
-                );
-//        Push to array
-                array_push($this->suser['data'], $this->user_data);
-            }
-            echo json_encode($this->suser);
+            $this->data=$this->retrieve->Get("itemrest.id as item_id, itemrest.name, unit_cost, quantity, company_id, invoice.id, invoice.created_at, company.name, address, email, contact, city, file_name, total.advance_payment, total_cost, wdiscount, due", "itemrest", ['invoice on itemrest.invoice_id=invoice.id', 'company on company.id=invoice.company_id', 'total on total.invoice_id=invoice.id'], "invoice.id=:invoice_id",$this->iid,"","","");
+            $this->invoice_request->RetrieveInvoiceAll($this->data);
         } else {
-            if (isset($_GET['sort'])) {
-                $field = $_GET['sort'];
-            } else {
-                $field = 'company.name';
+            if (isset($_GET['sort'])){
+                $sort=$_GET['sort'];
             }
-            if (isset($_GET['order'])) {
-                $ordertype = ($_GET['order'] == 'desc') ? 'desc' : 'asc';
-            } else {
-                $ordertype = 'asc';
+            else{
+                $sort='company.name';
             }
-            $this->sql = "Select itemrest.id as item_id, itemrest.name, unit_cost, quantity, company_id, invoice.id, invoice.created_at, company.name, address, email, contact, city, file_name from itemrest inner join invoice on itemrest.invoice_id=invoice.id inner join company on company.id=invoice.company_id order by $field $ordertype";
-            $this->stmt = $this->conn->query($this->sql);
-            $this->stmt->execute();
-            $this->data = $this->stmt->fetchAll();
-            $this->suser = array();
-            $this->suser['data'] = array();
-
-            foreach ($this->data as $this->k => $this->v) {
-                $this->user_data = array(
-                    'item_id' => $this->v['item_id'],
-                    'company_name' => $this->v['name'],
-                    'item_name' => $this->v[1],
-                    'unit_cost' => $this->v['unit_cost'],
-                    'quantity' => $this->v['quantity'],
-                    'company_id' => $this->v['company_id'],
-                    'created_at' => $this->v['created_at'],
-                    'address' => $this->v['address'],
-                    'email' => $this->v['email'],
-                    'contact' => $this->v['contact'],
-                    'city' => $this->v['city'],
-                    'file_name' => $this->v['file_name'],
-                    'invoice_id' => $this->v[5]
-                );
-//        Push to array
-                array_push($this->suser['data'], $this->user_data);
-            }
-            echo json_encode($this->suser);
+            $order = isset($_GET['order'])?$_GET['order']:'';
+            $field = $this->company_request->GetCompanyElse($sort, $order)[0];
+            $ordertype = $this->company_request->GetCompanyElse($sort, $order)[1];
+            $this->data=$this->retrieve->Get("itemrest.id as item_id, itemrest.name, unit_cost, quantity, company_id, invoice.id, invoice.created_at, company.name, address, email, contact, city, file_name, total.advance_payment, total_cost, wdiscount, due", "itemrest", ['invoice on itemrest.invoice_id=invoice.id', 'company on company.id=invoice.company_id', 'total on total.invoice_id=invoice.id'], "","", "$ordertype", "$field","");
+            $this->invoice_request->RetrieveInvoice($this->data);
         }
     }
 
@@ -170,20 +117,11 @@ class Invoice
     {
         header("Access-Control-Allow-Methods: DELETE");
         header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
-
         $this->id = $this->data['id'];
-        $this->sql = "delete from itemrest where invoice_id=$this->id";
-        $this->result_itemrest = $this->conn->exec($this->sql);
-        $this->sql = "delete from invoice where id=$this->id";
-        $this->result_invoice = $this->conn->exec($this->sql);
-        $this->sql = "delete from total where invoice_id=$this->id";
-        $this->result_total = $this->conn->exec($this->sql);
-        if ($this->result_itemrest && $this->result_invoice && $this->result_total) {
-            echo json_encode(array("Success" => "Records deleted successfully"));
-        } else {
-            echo json_encode(array("Fail" => "No such records found"));
-        }
-
+        $this->result_itemrest = $this->delete->Delete("itemrest", "invoice_id", "$this->id");
+        $this->result_invoice = $this->delete->Delete("invoice", "id", "$this->id");
+        $this->result_total = $this->delete->Delete("total", "invoice_id", "$this->id");
+        $this->invoice_request->DeleteInvoice($this->result_itemrest, $this->result_invoice, $this->result_total);
     }
 
     /**
@@ -200,32 +138,11 @@ class Invoice
         $this->wdiscount = $this->data['wdiscount'];
         $this->due = $this->data['due'];
 //        delete item
-        $this->sql = "select itemrest.id from itemrest inner join invoice on itemrest.invoice_id=invoice.id where invoice.id=$this->invoice_id";
-        $this->stmt = $this->conn->query($this->sql);
-        $this->stmt->execute();
-        $this->data = $this->stmt->fetchAll();
-        $data_array = array_values($this->data);
-        $array_value = [];
-        foreach ($data_array as $each_data) {
-            array_push($array_value, (int)$each_data['id']);
-        }
-
-        $define_array = array();
-
-        foreach ($this->itemarray as $v) {
-            foreach ($v as $a) {
-                array_push($define_array, (int)$a['id']);
-            }
-        }
-//        echo json_encode($define_array); #febata pathako itemid
-        $diff = array_diff($array_value, $define_array);
-        $final = [];
-        foreach ($diff as $a => $b) {
-            array_push($final, $b);
-        }
+        $this->data = $this->retrieve->Get("itemrest.id", "itemrest",["invoice on itemrest.invoice_id=invoice.id"],"invoice.id=:invoice_id", $this->data['invoice_id'],"","","");
+        $final=$this->invoice_request->UpdateInvoice($this->data, $this->itemarray);
         for ($i = 0; $i < count($final); $i++) {
-            $this->sql = "delete from itemrest where id=$final[$i]";
-            $this->conn->exec($this->sql);
+            $result  =$this->delete->Delete("itemrest", "id", "$final[$i]");
+
         }
 //        update item
         foreach ($this->itemarray as $v) {
@@ -233,26 +150,23 @@ class Invoice
                 $invoice_id = $a['invoice_id'];
                 $item_id = $a['id'];
                 $name = $a['name'];
+                $trimmed_name=ltrim($name);
                 $cost = $a['cost'];
+                $trim_name=substr($name, 1, strlen($name)-2);
                 $quantity = $a['quantity'];
                 if ($item_id != "") {
-                    $this->sql = "update itemrest set name='$name', unit_cost=$cost, quantity=$quantity where id=$item_id";
+                    $this->sql = $this->update->Update("itemrest", "name='$trimmed_name', unit_cost=$cost, quantity=$quantity", "id=$item_id");
                     $this->conn->exec($this->sql);
                 } else {
-                    $this->sql = "insert into itemrest(invoice_id, name, unit_cost, quantity) values($invoice_id, '$name', $cost, $quantity)";
-                    $this->conn->exec($this->sql);
+                    $result=$this->post_invoice->Insert('itemrest', 'invoice_id,name,unit_cost,quantity', "$invoice_id,$trim_name,$cost,$quantity");
+                    echo $result;
                 }
-
             }
-
         }
-        $this->sql = "update total set advance_payment=$this->advance, total_cost=$this->total_cost, wdiscount=$this->wdiscount, due=$this->due where invoice_id=$this->invoice_id";
+        $this->sql = $this->update->Update("total", "advance_payment=$this->advance, total_cost=$this->total_cost, wdiscount=$this->wdiscount, due=$this->due", "invoice_id=$this->invoice_id");
         $ret_ad = $this->conn->exec($this->sql);
-        if ($ret_ad) {
-            echo json_encode(array("Success" => "Invoice updated"));
-        } else {
-            echo json_encode(array("Fail" => "Update fail"));
-        }
+        $result = $this->company_request->UDResult($ret_ad, "Invoice Updated");
+        echo $result;
     }
 
     /**
@@ -268,108 +182,46 @@ class Invoice
         header("Access-Control-Allow-Credentials: true");
         $kname = isset($_GET["cname"]) ? $_GET["cname"] : "";
         if (isset($_GET['page'])) {
-            if (isset($_GET['sort'])) {
-                $field = $_GET['sort'];
-            } else {
-                $field = 'company.name';
+            if (isset($_GET['sort'])){
+                $sort=$_GET['sort'];
             }
-            if (isset($_GET['order'])) {
-                $ordertype = ($_GET['order'] == 'desc') ? 'desc' : 'asc';
-            } else {
-                $ordertype = 'asc';
+            else{
+                $sort='name';
             }
+            $order = $_GET['order'];
+            $field = $this->company_request->GetCompanyElse($sort, $order)[0];
+            $ordertype = $this->company_request->GetCompanyElse($sort, $order)[1];
             $name = $kname;
-            $na = trim($name, ' ""');
-            $nam = strtoupper($na);
-//            $uid = $_GET['offset'];
-
             $page=$_GET['page'];
-            $sql = "Select invoice.id from invoice inner join company on invoice.company_id=company.id";
-            $stmt = $this->conn->query($sql);
-            $stmt->execute();
-            $data = $stmt->fetchAll();
+            $data=$this->retrieve->Get("invoice.id", "invoice", ['company on invoice.company_id=company.id'], "","","","","");
             $off=array();
             foreach ($data as $k=>$v){
             array_push($off, $v['id']);
             }
-//            foreach ($off as $k=>$v){
-//                foreach ($v as $a=>$b){
-//                    echo $b;
-//                }
-//            }
             $uid= $off[($page-1)*5];
-            echo $kname!=="";
             if($kname === ""){
-            $sql = "Select invoice.id,company.name, company.id as cid from invoice inner join company on invoice.company_id=company.id where invoice.id>=$uid  order by $field $ordertype limit 5";
-            $stmt = $this->conn->query($sql);
-            $stmt->execute();
-            $data = $stmt->fetchAll();
-            $suser = array();
-            $suser['data'] = array();
-
-            foreach ($data as $k => $v) {
-                $user_data = array(
-                    'id' => $v[0],
-                    'cid' => $v['cid'],
-                    'cname' => $v['name']
-
-                );
-//        Push to array
-                array_push($suser['data'], $user_data);
-            }
-            echo json_encode($suser);
+                $data=$this->retrieve->Get("invoice.id,company.name, company.id as cid", "invoice", ["company on invoice.company_id=company.id where invoice.id>=$uid"], "","","$ordertype","$field","5");
+                $result=$this->invoice_request->InvoicePagesOne($data);
+                echo $result;
             }
             else{
-                $sql = "Select invoice.id as iid,company.name, company.id as cid from invoice inner join company on invoice.company_id=company.id where invoice.id>=$uid and upper(company.name)='$kname'  order by $field $ordertype limit 5";
-                $stmt = $this->conn->query($sql);
-                $stmt->execute();
-                $data = $stmt->fetchAll();
-                $suser = array();
-                $suser['data'] = array();
-
-                foreach ($data as $k => $v) {
-                    $user_data = array(
-                        'iid'=>$v['iid'],
-                        'id' => $v[0],
-                        'cid' => $v['cid'],
-                        'cname' => $v['name']
-
-                    );
-//        Push to array
-                    array_push($suser['data'], $user_data);
-                }
-                echo json_encode($suser);
+                $data=$this->retrieve->Get("invoice.id as iid,company.name, company.id as cid", "invoice", ["company on invoice.company_id=company.id where invoice.id>=$uid and upper(company.name)='$kname'"], "","","$ordertype","$field","5");
+                $result=$this->invoice_request->InvoicePagesTwo($data);
+                echo $result;
             }
         } else {
-            if (isset($_GET['sort'])) {
-                $field = $_GET['sort'];
-            } else {
-                $field = 'company.name';
+            if (isset($_GET['sort'])){
+                $sort=$_GET['sort'];
             }
-            if (isset($_GET['order'])) {
-                $ordertype = ($_GET['order'] == 'desc') ? 'desc' : 'asc';
-            } else {
-                $ordertype = 'asc';
+            else{
+                $sort='name';
             }
-            $sql = "Select invoice.id as iid,company.name, company.id as cid from invoice inner join company on invoice.company_id=company.id  where upper(company.name)='$kname' order by $field $ordertype";
-            $stmt = $this->conn->query($sql);
-            $stmt->execute();
-            $data = $stmt->fetchAll();
-            $suser = array();
-            $suser['data'] = array();
-
-            foreach ($data as $k => $v) {
-                $user_data = array(
-                    'iid'=>$v['iid'],
-                    'id' => $v[0],
-                    'cid' => $v['cid'],
-                    'cname' => $v['name']
-
-                );
-//        Push to array
-                array_push($suser['data'], $user_data);
-            }
-            echo json_encode($suser);
+            $order = $_GET['order'];
+            $field = $this->company_request->GetCompanyElse($sort, $order)[0];
+            $ordertype = $this->company_request->GetCompanyElse($sort, $order)[1];
+            $data=$this->retrieve->Get("invoice.id as iid,company.name, company.id as cid", "invoice", ["company on invoice.company_id=company.id  where upper(company.name)='$kname'"], "","","$ordertype","$field","");
+            $result=$this->invoice_request->InvoicePagesTwo($data);
+            echo $result;
         }
     }
 
