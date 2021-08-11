@@ -57,14 +57,29 @@ class Company extends Database
         $this->city = $this->data['city'];
         header("Access-Control-Allow-Methods: POST");
         header("Access-Control-Allow-Headers: *, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+        $validate_name=Validate::CheckEmpty('name', $this->name);
+        $validate_address=Validate::CheckEmpty('address', $this->address);
+        $validate_email=Validate::CheckEmpty('email', $this->email);
+        $validate_contact=Validate::CheckEmpty('contact', $this->contact);
+        $validate_city=Validate::CheckEmpty('city', $this->city);
+        $email_format=Validate::EmailFormat($this->email);
 
-        if ($this->name && $this->address && $this->email && $this->contact && $this->city) {
+
+        if ($validate_name && $validate_address && $validate_email && $validate_contact && $validate_city && $email_format) {
 
             $file_name_new = $this->up->upload($this->data['name'], $this->data['file_name'], $this->data['file_image']);
 //        $this->company_request->PostCompany("'$this->name'", "'$this->address'", "'$this->email'", "'$this->contact'", "'$this->city'", "$this->data['file_name']", "$this->data['file_image']");
 //        $file_name_new = $this->up->upload($this->data['name'], $this->data['file_name'], $this->data['file_image']);
             $result = $this->dbquery->Insert('Company', 'name,address,email,contact,city,file_name', "$this->name,$this->address,$this->email,$this->contact,$this->city,$file_name_new");
             echo $result;
+        }
+        else{
+            echo $validate_name;
+            echo $validate_address;
+            echo $validate_email;
+            echo $validate_city;
+            echo $validate_contact;
+            echo $email_format;
         }
     }
 

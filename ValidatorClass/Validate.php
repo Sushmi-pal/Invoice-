@@ -15,4 +15,26 @@ class Validate{
             return json_encode(array("Message" => ""));
         }
     }
+
+    public static function EmailFormat($email){
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $emailErr = "Invalid email format";
+            echo $emailErr;
+        }
+    }
+
+    public static function CheckEmpty($actual_name, $field){
+        if (empty($field)){
+            $Capital=ucwords($actual_name);
+            $fieldErr="$Capital is required";
+            echo $fieldErr;
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
 }
+
+
+
