@@ -118,7 +118,7 @@
             body: JSON.stringify({"email": email.value})
         }).then(res => res.json()).then(data => {
             document.getElementById('SpanEmail').innerText = data['Message']
-        }).catch(err => console.log(err));
+        })
     }
 
 
@@ -148,7 +148,6 @@
         let email = document.getElementById('Email')
         let city = document.getElementById('City')
         let phone = document.getElementById('Contact')
-        console.log(document.querySelector('[type=file]').files.length)
         if (document.querySelector('[type=file]').files.length === 1) {
         const myPost = {
             email: email.value,
@@ -173,10 +172,10 @@
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(myPost)
-            }).then(res => res.json()).then(() => {
+            }).then(res => res.text()).then(() => {
                 alert("Your information has been saved")
                 window.location.href = "Invoice.html"
-            }).catch(err => console.log(err));
+            })
         }
     }
         else{

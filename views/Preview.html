@@ -110,8 +110,9 @@
             let total_cost = 0
             let image_id = document.getElementById('image_id')
             data.data.forEach((data, index) => {
+                    trim_itemname=data['item_name'].replaceAll("'","")
                     op += `<td >${index + 1}</td>`
-                    op += `<td >${data['item_name']}</td>`
+                    op += `<td >${trim_itemname}</td>`
                     op += `<td >${data['unit_cost']}</td>`
                     op += `<td >${data['quantity']}</td>`
                     let cost_item = data['unit_cost'] * data['quantity']

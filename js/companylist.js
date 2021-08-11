@@ -14,7 +14,7 @@ function CompanyList(column_name, order) {
             op += "<tr>";
             CompanyTable.innerHTML = op;
         })
-    }).catch(err => console.log(err));
+    })
 
 }
 
@@ -71,7 +71,7 @@ function UpdateCompany() {
 
     }).then(res => res.json()).then(() => {
         CompanyList()
-    }).catch(err => console.log(err));
+    })
 }
 
 function DeleteCompany(id) {
